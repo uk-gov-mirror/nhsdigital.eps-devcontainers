@@ -387,3 +387,8 @@ vulnerabilities:
     purls:
       - "pkg:golang/stdlib@v1.26.0"
     expired_at: 2026-09-11
+  - id: CVE-2026-24051
+    statement: "OpenTelemetry Go SDK Vulnerable to Arbitrary Code Execution via PATH Hijacking"
+    purls:
+      - "pkg:golang/go.opentelemetry.io/otel/sdk@v1.38.0"
+    expired_at: 2026-09-16

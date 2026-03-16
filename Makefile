@@ -21,6 +21,43 @@ install-node:
 install-hooks: install-python
 	poetry run pre-commit install --install-hooks --overwrite
 
+build-base-image:
+	CONTAINER_NAME=base BASE_VERSION_TAG=local-build BASE_FOLDER=. IMAGE_TAG=local-build $(MAKE) build-image
+
+build-node-24-image:
+	CONTAINER_NAME=node_24 BASE_VERSION_TAG=local-build BASE_FOLDER=base_node IMAGE_TAG=local-build $(MAKE) build-image
+
+build-node-24-python-3-10-image:
+	CONTAINER_NAME=node_24_python_3_10 BASE_VERSION_TAG=local-build BASE_FOLDER=languages IMAGE_TAG=local-build $(MAKE) build-image
+
+build-node-24-python-3-12-image:
+	CONTAINER_NAME=node_24_python_3_12 BASE_VERSION_TAG=local-build BASE_FOLDER=languages IMAGE_TAG=local-build $(MAKE) build-image
+
+build-node-24-python-3-13-image:
+	CONTAINER_NAME=node_24_python_3_13 BASE_VERSION_TAG=local-build BASE_FOLDER=languages IMAGE_TAG=local-build $(MAKE) build-image
+
+build-node-24-python-3-14-image:
+	CONTAINER_NAME=node_24_python_3_14 BASE_VERSION_TAG=local-build BASE_FOLDER=languages IMAGE_TAG=local-build $(MAKE) build-image
+
+build-eps-storage-terraform-image:
+	CONTAINER_NAME=eps_storage_terraform BASE_VERSION_TAG=local-build BASE_FOLDER=projects IMAGE_TAG=local-build $(MAKE) build-image
+
+build-fhir-facade-image:
+	CONTAINER_NAME=fhir_facade_api BASE_VERSION_TAG=local-build BASE_FOLDER=projects IMAGE_TAG=local-build $(MAKE) build-image
+
+build-node-24-python-3-14-golang-1-24-image:
+	CONTAINER_NAME=node_24_python_3_14_golang_1_24 BASE_VERSION_TAG=local-build BASE_FOLDER=projects IMAGE_TAG=local-build $(MAKE) build-image
+
+build-node-24-python-3-14-java-24-image:
+	CONTAINER_NAME=node_24_python_3_14_java_24 BASE_VERSION_TAG=local-build BASE_FOLDER=projects IMAGE_TAG=local-build $(MAKE) build-image
+
+build-regression-tests-image:
+	CONTAINER_NAME=regression_tests BASE_VERSION_TAG=local-build BASE_FOLDER=projects IMAGE_TAG=local-build $(MAKE) build-image
+
+build-all: build-base-image build-node-24-image build-node-24-python-3-10-image build-node-24-python-3-12-image build-node-24-python-3-13-image build-node-24-python-3-14-image \
+	build-eps-storage-terraform-image build-fhir-facade-image build-node-24-python-3-14-golang-1-24-image build-node-24-python-3-14-java-24-image \
+	build-regression-tests-image
+
 build-image: guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
 	npx devcontainer build \
 		--workspace-folder ./src/$${BASE_FOLDER}/$${CONTAINER_NAME} \
