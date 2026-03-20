@@ -1,3 +1,20 @@
+FROM golang:1.26.1-bookworm AS build
+ARG TARGETARCH
+RUN apt-get update && apt-get install -y \
+    jq \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+COPY src/base/.devcontainer/scripts/install_cosign.sh /tmp/install_cosign.sh
+COPY src/base/.devcontainer/scripts/install_trivy.sh /tmp/install_trivy.sh
+RUN INSTALL_DIR=/usr/local/bin /tmp/install_cosign.sh
+RUN case "${TARGETARCH}" in \
+        x86_64|amd64) TRIVY_ARCH=64bit ;; \
+        aarch64|arm64) TRIVY_ARCH=ARM64 ;; \
+        *) echo "Unsupported TARGETARCH: ${TARGETARCH}" && exit 1 ;; \
+    esac \
+    && INSTALL_DIR=/tmp/trivy/ ARCH="${TRIVY_ARCH}" /tmp/install_trivy.sh
+
+
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 ARG TARGETARCH
 ENV TARGETARCH=${TARGETARCH}
@@ -64,11 +81,13 @@ RUN git clone https://github.com/awslabs/git-secrets.git /tmp/git-secrets && \
     chmod 755 /usr/share/secrets-scanner && \
     curl -L https://raw.githubusercontent.com/NHSDigital/software-engineering-quality-framework/main/tools/nhsd-git-secrets/nhsd-rules-deny.txt -o /usr/share/secrets-scanner/nhsd-rules-deny.txt
 
+COPY --from=build /tmp/trivy/trivy /usr/local/bin/trivy
+
 USER vscode
 
-ENV PATH="/home/vscode/.asdf/shims/:$PATH:/workspaces/eps-devcontainers/node_modules/.bin"
+ENV PATH="/home/vscode/.asdf/shims:/home/vscode/.local/bin:$PATH:/workspaces/eps-devcontainers/node_modules/.bin"
 RUN \
-    echo 'PATH="/home/vscode/.asdf/shims/:$PATH:/workspaces/eps-devcontainers/node_modules/.bin"' >> ~/.bashrc; \
+    echo 'PATH="/home/vscode/.asdf/shims:/home/vscode/.local/bin:$PATH:/workspaces/eps-devcontainers/node_modules/.bin"' >> ~/.bashrc; \
     echo '. <(asdf completion bash)' >> ~/.bashrc; \
     echo '# Install Ruby Gems to ~/gems' >> ~/.bashrc; \
     echo 'export GEM_HOME="$HOME/gems"' >> ~/.bashrc; \
@@ -83,8 +102,7 @@ RUN asdf plugin add python; \
     asdf plugin add actionlint; \
     asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git; \
     asdf plugin add trivy https://github.com/zufardhiyaulhaq/asdf-trivy.git; \
-    asdf plugin add yq https://github.com/sudermanjr/asdf-yq.git
-
+    asdf plugin add yq https://github.com/sudermanjr/asdf-yq.git;
 
 WORKDIR /workspaces/eps-devcontainers
 COPY .tool-versions /workspaces/eps-devcontainers/.tool-versions

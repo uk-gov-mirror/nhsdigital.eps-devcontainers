@@ -10,6 +10,9 @@ guard-%:
 		exit 1; \
 	fi
 
+.PHONY: install install-python install-node install-hooks build-base-image build-node-24-image build-node-24-python-3-10-image build-node-24-python-3-12-image build-node-24-python-3-13-image build-node-24-python-3-14-image \
+	build-eps-storage-terraform-image build-fhir-facade-image build-node-24-python-3-14-golang-1-24-image build-node-24-python-3-14-java-24-image \
+	build-regression-tests-image build-all build-image build-githubactions-image scan-image scan-image-json shell-image lint test lint-githubactions lint-githubaction-scripts github-login clean
 install: install-python install-node install-hooks
 
 install-python:
@@ -129,13 +132,9 @@ test:
 lint-githubactions:
 	actionlint
 
-github-login:
-	gh auth login --scopes read:packages
-
 lint-githubaction-scripts:
 	shellcheck .github/scripts/*.sh
 
 clean:
 	rm -rf .out
 	find . -type f -name '.trivyignore_combined.yaml' -delete
-	

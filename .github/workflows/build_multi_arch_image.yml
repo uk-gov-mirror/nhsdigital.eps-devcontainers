@@ -64,9 +64,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: setup trivy
-        uses: aquasecurity/setup-trivy@3fb12ec12f41e471780db15c232d5dd185dcb514
-        with:
-          version: v0.69.3
+        run: |
+           docker build  --output=/usr/local/bin/ -f "src/base/.devcontainer/Dockerfile.trivy.${ARCH}" .
+        env:
+          ARCH: '${{ matrix.arch }}'
       - name: setup node
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:

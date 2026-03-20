@@ -33,6 +33,7 @@ jobs:
             echo "node_24_languages=$node_24_language_folders"
             echo "projects=$project_folders"
           } >> "$GITHUB_OUTPUT"
+
   package_base_docker_image:
     uses: ./.github/workflows/build_multi_arch_image.yml
     with:
