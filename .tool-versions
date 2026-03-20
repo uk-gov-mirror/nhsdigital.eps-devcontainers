@@ -5,6 +5,5 @@ shellcheck 0.11.0
 direnv 2.37.1
 actionlint 1.7.10
 ruby 3.3.0
-trivy 0.69.3
 yq 4.52.2
 golang 1.24.13

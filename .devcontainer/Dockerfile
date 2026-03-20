@@ -96,7 +96,9 @@ RUN asdf install python; \
     asdf install
 
 COPY scripts/install_cosign.sh /tmp/install_cosign.sh
+COPY scripts/install_trivy.sh /tmp/install_trivy.sh
 RUN INSTALL_DIR=/home/vscode/.local/bin /tmp/install_cosign.sh
+RUN INSTALL_DIR=/home/vscode/.local/bin /tmp/install_trivy.sh
 
 RUN git-secrets --register-aws --global && \
   git-secrets --add-provider --global -- cat /usr/share/secrets-scanner/nhsd-rules-deny.txt

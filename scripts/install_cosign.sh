@@ -3,7 +3,6 @@ set -euo pipefail
 
 DEFAULT_INSTALL_DIR="/usr/local/bin"
 INSTALL_DIR="${INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
-mkdir -p "$INSTALL_DIR"
 REQUESTED_VERSION="${1:-latest}"
 OS="$(uname -s)"
 ARCH="$(uname -m)"
@@ -65,15 +64,19 @@ BASE_URL="https://github.com/sigstore/cosign/releases/download/${VERSION}"
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
+download() {
+  local url="${1}" dest="${2}"
+  echo "Downloading ${dest} ..."
+  curl -fsSL "${url}" -o "${dest}"
+}
+
 BIN_PATH="$TMP_DIR/${BINARY_NAME}"
 SIGSTORE_PATH="$TMP_DIR/${BINARY_NAME}-kms.sigstore.json"
 ARTIFACT_PATH="$TMP_DIR/artifact.pub"
 DECODED_SIGSTORE_PATH="$TMP_DIR/cosign-kms.sig.decoded"
 
-echo "downloading ${BINARY_NAME} version ${VERSION} from ${BASE_URL}"
-curl -fsSL "${BASE_URL}/${BINARY_NAME}" -o "$BIN_PATH"
-echo "downloading sigstore signature"
-curl -fsSL "${BASE_URL}/${BINARY_NAME}-kms.sigstore.json" -o "$SIGSTORE_PATH"
+download "${BASE_URL}/${BINARY_NAME}" "$BIN_PATH"
+download "${BASE_URL}/${BINARY_NAME}-kms.sigstore.json" "$SIGSTORE_PATH"
 
 # install tuf-client
 go install github.com/theupdateframework/go-tuf/cmd/tuf-client@latest
@@ -96,7 +99,7 @@ echo "verifying signature with cosign verify-blob"
 chmod +x "$BIN_PATH"
 ${BIN_PATH} verify-blob --bundle "${SIGSTORE_PATH}" --key "$ARTIFACT_PATH" "$BIN_PATH"
 
-
+mkdir -p "$INSTALL_DIR"
 install -m 0755 "$BIN_PATH" "${INSTALL_DIR}/cosign"
 
 "${INSTALL_DIR}/cosign" version
