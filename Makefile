@@ -1,8 +1,4 @@
 CONTAINER_PREFIX=ghcr.io/nhsdigital/eps-devcontainers/
-include src/base/.devcontainer/Mk/build.mk
-include src/base/.devcontainer/Mk/check.mk
-include src/base/.devcontainer/Mk/trivy.mk
-include src/base/.devcontainer/Mk/credentials.mk
 
 ifeq ($(strip $(NO_CACHE)),true)
 NO_CACHE_FLAG=--no-cache
@@ -136,13 +132,9 @@ test:
 lint-githubactions:
 	actionlint
 
-github-login:
-	gh auth login --scopes read:packages
-
 lint-githubaction-scripts:
 	shellcheck .github/scripts/*.sh
 
 clean:
 	rm -rf .out
 	find . -type f -name '.trivyignore_combined.yaml' -delete
-	
