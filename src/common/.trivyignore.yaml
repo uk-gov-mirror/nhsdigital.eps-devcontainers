@@ -432,3 +432,10 @@ vulnerabilities:
     purls:
       - "pkg:deb/ubuntu/linux-libc-dev@5.15.0-173.183?arch=amd64&distro=ubuntu-22.04"
     expired_at: 2026-09-16
+  - id: CVE-2026-33186
+    statement: "gRPC-Go has an authorization bypass via missing leading slash in :path"
+    purls:
+      - "pkg:golang/google.golang.org/grpc@v1.74.2"
+      - "pkg:golang/google.golang.org/grpc@v1.78.0"
+      - "pkg:golang/google.golang.org/grpc@v1.79.2"
+    expired_at: 2026-09-20
