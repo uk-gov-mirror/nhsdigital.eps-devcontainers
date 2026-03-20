@@ -4,9 +4,13 @@ set -euo pipefail
 DEFAULT_INSTALL_DIR="/usr/local/bin"
 INSTALL_DIR="${INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
 VERSION="v0.69.3"
+DEFAULT_ARCH="64bit"
+ARCH="${ARCH:-$DEFAULT_ARCH}"
+#trivy_0.69.3_Linux-64bit.tar.gz 
+#trivy_0.69.3_Linux-ARM64.tar.gz 
 RELEASE_NUMBER="${VERSION#v}"
 BASE_URL="https://github.com/aquasecurity/trivy/releases/download/${VERSION}"
-ARCHIVE="trivy_${RELEASE_NUMBER}_Linux-64bit.tar.gz"
+ARCHIVE="trivy_${RELEASE_NUMBER}_Linux-${ARCH}.tar.gz"
 BUNDLE="${ARCHIVE}.sigstore.json"
 CERT_IDENTITY="https://github.com/aquasecurity/trivy/.github/workflows/reusable-release.yaml@refs/tags/${VERSION}"
 
@@ -53,9 +57,8 @@ cosign verify-blob-attestation "${ARCHIVE_PATH}" \
 
 echo "Sigstore verification passed"
 tar -xzf "${ARCHIVE_PATH}" -C "${TMP_DIR}"
+
 mkdir -p "$INSTALL_DIR"
 install -m 0755 "$TMP_DIR/trivy" "${INSTALL_DIR}/trivy"
-
-"${INSTALL_DIR}/trivy" version
 
 echo "trivy ${VERSION} installed to ${INSTALL_DIR}"
