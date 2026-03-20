@@ -37,7 +37,7 @@ case "$ARCH" in
     ;;
 esac
 
-for cmd in curl openssl install go asdf; do
+for cmd in curl openssl install go jq; do
   if ! command -v "$cmd" >/dev/null 2>&1; then
     echo "Error: $cmd is required but not found in PATH" >&2
     exit 1
@@ -80,7 +80,6 @@ download "${BASE_URL}/${BINARY_NAME}-kms.sigstore.json" "$SIGSTORE_PATH"
 
 # install tuf-client
 go install github.com/theupdateframework/go-tuf/cmd/tuf-client@latest
-asdf reshim golang
 
 # setup tuf-client
 SIGSTORE_ROOT_PATH="$TMP_DIR/sigstore-root.json"

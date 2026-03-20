@@ -1,3 +1,14 @@
+FROM golang:1.26.1-bookworm AS build
+RUN apt-get update && apt-get install -y \
+    jq \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+COPY scripts/install_cosign.sh /tmp/install_cosign.sh
+COPY scripts/install_trivy.sh /tmp/install_trivy.sh
+RUN INSTALL_DIR=/usr/local/bin /tmp/install_cosign.sh
+RUN INSTALL_DIR=/tmp/trivy_arm64 ARCH=ARM64 /tmp/install_trivy.sh
+RUN INSTALL_DIR=/tmp/trivy_amd64 ARCH=64bit /tmp/install_trivy.sh
+
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 ARG TARGETARCH
 ENV TARGETARCH=${TARGETARCH}
@@ -63,7 +74,7 @@ RUN git clone https://github.com/awslabs/git-secrets.git /tmp/git-secrets && \
     mkdir -p /usr/share/secrets-scanner && \
     chmod 755 /usr/share/secrets-scanner && \
     curl -L https://raw.githubusercontent.com/NHSDigital/software-engineering-quality-framework/main/tools/nhsd-git-secrets/nhsd-rules-deny.txt -o /usr/share/secrets-scanner/nhsd-rules-deny.txt
-
+COPY --from=build /tmp/trivy_amd64/trivy /usr/local/bin/trivy
 USER vscode
 
 ENV PATH="/home/vscode/.asdf/shims:/home/vscode/.local/bin:$PATH:/workspaces/eps-devcontainers/node_modules/.bin"
@@ -83,9 +94,7 @@ RUN asdf plugin add python; \
     asdf plugin add actionlint; \
     asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git; \
     asdf plugin add trivy https://github.com/zufardhiyaulhaq/asdf-trivy.git; \
-    asdf plugin add yq https://github.com/sudermanjr/asdf-yq.git; \
-    asdf plugin add golang
-
+    asdf plugin add yq https://github.com/sudermanjr/asdf-yq.git;
 
 WORKDIR /workspaces/eps-devcontainers
 COPY .tool-versions /workspaces/eps-devcontainers/.tool-versions
@@ -94,11 +103,6 @@ COPY .tool-versions /home/vscode/.tool-versions
 # install python before poetry to ensure correct python version is used
 RUN asdf install python; \
     asdf install
-
-COPY scripts/install_cosign.sh /tmp/install_cosign.sh
-COPY scripts/install_trivy.sh /tmp/install_trivy.sh
-RUN INSTALL_DIR=/home/vscode/.local/bin /tmp/install_cosign.sh
-RUN INSTALL_DIR=/home/vscode/.local/bin /tmp/install_trivy.sh
 
 RUN git-secrets --register-aws --global && \
   git-secrets --add-provider --global -- cat /usr/share/secrets-scanner/nhsd-rules-deny.txt
