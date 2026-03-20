@@ -9,6 +9,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@devcontainers/cli": "^0.84.0"
+    "@devcontainers/cli": "^0.84.0",
+    "@tufjs/cli": "^0.4.1"
   }
 }
