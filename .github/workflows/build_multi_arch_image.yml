@@ -63,14 +63,11 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
-      - name: Download trivy
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-        with:
-          name: trivy
       - name: setup trivy
         run: |
-          sudo cp "trivy/trivy_${ARCH}/trivy" /usr/local/bin/
-          chmod +x /usr/local/bin/trivy
+           docker build  --output=/usr/local/bin/ -f "src/trivy/Dockerfile.${ARCH}" .
+        env:
+          ARCH: '${{ matrix.arch }}'
       - name: setup node
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:

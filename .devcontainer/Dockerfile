@@ -74,7 +74,9 @@ RUN git clone https://github.com/awslabs/git-secrets.git /tmp/git-secrets && \
     mkdir -p /usr/share/secrets-scanner && \
     chmod 755 /usr/share/secrets-scanner && \
     curl -L https://raw.githubusercontent.com/NHSDigital/software-engineering-quality-framework/main/tools/nhsd-git-secrets/nhsd-rules-deny.txt -o /usr/share/secrets-scanner/nhsd-rules-deny.txt
-COPY --from=build /tmp/trivy_amd64/trivy /usr/local/bin/trivy
+
+COPY --from=build /tmp/trivy_${TARGETARCH}/trivy /usr/local/bin/trivy
+
 USER vscode
 
 ENV PATH="/home/vscode/.asdf/shims:/home/vscode/.local/bin:$PATH:/workspaces/eps-devcontainers/node_modules/.bin"

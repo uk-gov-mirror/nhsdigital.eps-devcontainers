@@ -33,40 +33,9 @@ jobs:
             echo "node_24_languages=$node_24_language_folders"
             echo "projects=$project_folders"
           } >> "$GITHUB_OUTPUT"
-  download_trivy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
-      - name: Install cosign
-        run: |
-          ./scripts/install_cosign.sh
-        env:
-          INSTALL_DIR: ${HOME}/.local/bin
-      - name: Get amd64 trivy
-        run: |
-          ./scripts/install_trivy.sh
-        env:
-          INSTALL_DIR: trivy_amd64
-          ARCH: 64bit
-      - name: Get arm64 trivy
-        run: |
-          ./scripts/install_trivy.sh
-        env:
-          INSTALL_DIR: trivy_arm64
-          ARCH: ARM64
-      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
-        name: Upload trivy
-        with:
-          name: "trivy"
-          path: |
-            trivy_amd64/trivy
-            trivy_arm64/trivy
 
   package_base_docker_image:
     uses: ./.github/workflows/build_multi_arch_image.yml
-    needs: [
-      download_trivy
-    ]
     with:
       tag_latest: ${{ inputs.tag_latest }}
       docker_tag: ${{ inputs.docker_tag }}
