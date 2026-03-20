@@ -66,9 +66,9 @@ RUN git clone https://github.com/awslabs/git-secrets.git /tmp/git-secrets && \
 
 USER vscode
 
-ENV PATH="/home/vscode/.asdf/shims/:$PATH:/workspaces/eps-devcontainers/node_modules/.bin"
+ENV PATH="/home/vscode/.asdf/shims:/home/vscode/.local/bin:$PATH:/workspaces/eps-devcontainers/node_modules/.bin"
 RUN \
-    echo 'PATH="/home/vscode/.asdf/shims/:$PATH:/workspaces/eps-devcontainers/node_modules/.bin"' >> ~/.bashrc; \
+    echo 'PATH="/home/vscode/.asdf/shims:/home/vscode/.local/bin:$PATH:/workspaces/eps-devcontainers/node_modules/.bin"' >> ~/.bashrc; \
     echo '. <(asdf completion bash)' >> ~/.bashrc; \
     echo '# Install Ruby Gems to ~/gems' >> ~/.bashrc; \
     echo 'export GEM_HOME="$HOME/gems"' >> ~/.bashrc; \
@@ -83,7 +83,8 @@ RUN asdf plugin add python; \
     asdf plugin add actionlint; \
     asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git; \
     asdf plugin add trivy https://github.com/zufardhiyaulhaq/asdf-trivy.git; \
-    asdf plugin add yq https://github.com/sudermanjr/asdf-yq.git
+    asdf plugin add yq https://github.com/sudermanjr/asdf-yq.git; \
+    asdf plugin add golang
 
 
 WORKDIR /workspaces/eps-devcontainers
@@ -93,6 +94,9 @@ COPY .tool-versions /home/vscode/.tool-versions
 # install python before poetry to ensure correct python version is used
 RUN asdf install python; \
     asdf install
+
+COPY scripts/install_cosign.sh /tmp/install_cosign.sh
+RUN INSTALL_DIR=/home/vscode/.local/bin /tmp/install_cosign.sh
 
 RUN git-secrets --register-aws --global && \
   git-secrets --add-provider --global -- cat /usr/share/secrets-scanner/nhsd-rules-deny.txt

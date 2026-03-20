@@ -3,6 +3,7 @@ set -euo pipefail
 
 DEFAULT_INSTALL_DIR="/usr/local/bin"
 INSTALL_DIR="${INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
+mkdir -p "$INSTALL_DIR"
 REQUESTED_VERSION="${1:-latest}"
 OS="$(uname -s)"
 ARCH="$(uname -m)"
@@ -13,7 +14,7 @@ usage() {
 Usage: install_cosign.sh [version]
 
 Downloads the requested cosign release (default: latest) for Linux amd64, verifies
-its SHA256 checksum, and installs it into $INSTALL_DIR (override via INSTALL_DIR env var).
+its signature, and installs it into $INSTALL_DIR (override via INSTALL_DIR env var).
 EOF
 }
 
@@ -37,7 +38,7 @@ case "$ARCH" in
     ;;
 esac
 
-for cmd in curl sha256sum install; do
+for cmd in curl openssl install go asdf; do
   if ! command -v "$cmd" >/dev/null 2>&1; then
     echo "Error: $cmd is required but not found in PATH" >&2
     exit 1
@@ -45,7 +46,9 @@ for cmd in curl sha256sum install; do
 done
 
 get_latest_tag() {
-  curl -fsSL "$API_URL/latest" | awk -F'"' '/tag_name/ {print $4; exit}'
+  local response
+  response="$(curl -fsSL "$API_URL/latest")"
+  awk -F'"' '/tag_name/ {print $4; exit}' <<<"$response"
 }
 
 VERSION="$REQUESTED_VERSION"
@@ -63,14 +66,36 @@ TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
 BIN_PATH="$TMP_DIR/${BINARY_NAME}"
-SHA_PATH="$TMP_DIR/${BINARY_NAME}.sha256"
+SIGSTORE_PATH="$TMP_DIR/${BINARY_NAME}-kms.sigstore.json"
+ARTIFACT_PATH="$TMP_DIR/artifact.pub"
+DECODED_SIGSTORE_PATH="$TMP_DIR/cosign-kms.sig.decoded"
 
+echo "downloading ${BINARY_NAME} version ${VERSION} from ${BASE_URL}"
 curl -fsSL "${BASE_URL}/${BINARY_NAME}" -o "$BIN_PATH"
-curl -fsSL "${BASE_URL}/${BINARY_NAME}.sha256" -o "$SHA_PATH"
+echo "downloading sigstore signature"
+curl -fsSL "${BASE_URL}/${BINARY_NAME}-kms.sigstore.json" -o "$SIGSTORE_PATH"
 
+# install tuf-client
+go install github.com/theupdateframework/go-tuf/cmd/tuf-client@latest
+asdf reshim golang
+
+# setup tuf-client
+SIGSTORE_ROOT_PATH="$TMP_DIR/sigstore-root.json"
+curl -o "$SIGSTORE_ROOT_PATH" https://raw.githubusercontent.com/sigstore/root-signing/refs/heads/main/metadata/root_history/10.root.json
+tuf-client init https://tuf-repo-cdn.sigstore.dev "$SIGSTORE_ROOT_PATH"
+
+tuf-client get https://tuf-repo-cdn.sigstore.dev artifact.pub > "$ARTIFACT_PATH"
+
+cat "$SIGSTORE_PATH" | jq -r .messageSignature.signature | base64 -d > "$DECODED_SIGSTORE_PATH"
 pushd "$TMP_DIR" >/dev/null
-sha256sum -c "${BINARY_NAME}.sha256"
+echo "verifying signature with artifact.pub"
+openssl dgst -sha256 -verify "$ARTIFACT_PATH" -signature "$DECODED_SIGSTORE_PATH" "$BIN_PATH"
 popd >/dev/null
+
+echo "verifying signature with cosign verify-blob"
+chmod +x "$BIN_PATH"
+${BIN_PATH} verify-blob --bundle "${SIGSTORE_PATH}" --key "$ARTIFACT_PATH" "$BIN_PATH"
+
 
 install -m 0755 "$BIN_PATH" "${INSTALL_DIR}/cosign"
 
