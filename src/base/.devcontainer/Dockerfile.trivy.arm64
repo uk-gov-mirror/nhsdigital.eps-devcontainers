@@ -3,8 +3,8 @@ RUN apt-get update && apt-get install -y \
     jq \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-COPY scripts/install_cosign.sh /tmp/install_cosign.sh
-COPY scripts/install_trivy.sh /tmp/install_trivy.sh
+COPY src/base/.devcontainer/scripts/install_cosign.sh /tmp/install_cosign.sh
+COPY src/base/.devcontainer/scripts/install_trivy.sh /tmp/install_trivy.sh
 RUN INSTALL_DIR=/usr/local/bin /tmp/install_cosign.sh
 RUN INSTALL_DIR=/tmp/trivy/ ARCH=ARM64 /tmp/install_trivy.sh
 
