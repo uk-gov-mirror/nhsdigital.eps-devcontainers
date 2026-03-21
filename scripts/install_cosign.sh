@@ -31,6 +31,9 @@ case "$ARCH" in
   x86_64|amd64)
     BINARY_NAME="cosign-linux-amd64"
     ;;
+  aarch64|arm64)
+    BINARY_NAME="cosign-linux-arm64"
+    ;;
   *)
     echo "Error: Unsupported architecture $ARCH" >&2
     exit 1
