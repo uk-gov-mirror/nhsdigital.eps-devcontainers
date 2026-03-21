@@ -3,11 +3,15 @@ RUN apt-get update && apt-get install -y \
     jq \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-COPY scripts/install_cosign.sh /tmp/install_cosign.sh
-COPY scripts/install_trivy.sh /tmp/install_trivy.sh
-RUN INSTALL_DIR=/usr/local/bin /tmp/install_cosign.sh
-RUN INSTALL_DIR=/tmp/trivy_arm64 ARCH=ARM64 /tmp/install_trivy.sh
-RUN INSTALL_DIR=/tmp/trivy_amd64 ARCH=64bit /tmp/install_trivy.sh
+COPY src/base/.devcontainer/scripts/install_cosign.sh /tmp/install_cosign.sh
+COPY src/base/.devcontainer/scripts/install_trivy.sh /tmp/install_trivy.sh
+RUN case "${TARGETARCH}" in \
+        x86_64|amd64) TRIVY_ARCH=64bit ;; \
+        aarch64|arm64) TRIVY_ARCH=ARM64 ;; \
+        *) echo "Unsupported TARGETARCH: ${TARGETARCH}" && exit 1 ;; \
+    esac \
+    && INSTALL_DIR=/tmp/trivy/ ARCH="${TRIVY_ARCH}" /tmp/install_trivy.sh
+
 
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 ARG TARGETARCH
@@ -75,7 +79,7 @@ RUN git clone https://github.com/awslabs/git-secrets.git /tmp/git-secrets && \
     chmod 755 /usr/share/secrets-scanner && \
     curl -L https://raw.githubusercontent.com/NHSDigital/software-engineering-quality-framework/main/tools/nhsd-git-secrets/nhsd-rules-deny.txt -o /usr/share/secrets-scanner/nhsd-rules-deny.txt
 
-COPY --from=build /tmp/trivy_${TARGETARCH}/trivy /usr/local/bin/trivy
+COPY --from=build /tmp/trivy/trivy /usr/local/bin/trivy
 
 USER vscode
 

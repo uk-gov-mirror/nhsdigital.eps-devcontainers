@@ -6,8 +6,6 @@ INSTALL_DIR="${INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
 VERSION="v0.69.3"
 DEFAULT_ARCH="64bit"
 ARCH="${ARCH:-$DEFAULT_ARCH}"
-#trivy_0.69.3_Linux-64bit.tar.gz 
-#trivy_0.69.3_Linux-ARM64.tar.gz 
 RELEASE_NUMBER="${VERSION#v}"
 BASE_URL="https://github.com/aquasecurity/trivy/releases/download/${VERSION}"
 ARCHIVE="trivy_${RELEASE_NUMBER}_Linux-${ARCH}.tar.gz"
@@ -18,7 +16,7 @@ usage() {
   cat <<'EOF'
 Usage: install_trivy.sh [output_dir]
 
-Downloads Trivy v0.69.3, its sigstore bundle, and checksum into output_dir (default: current directory),
+Downloads Trivy, its sigstore bundle, and checksum into output_dir (default: current directory),
 then verifies the checksum and the sigstore bundle, following
 https://github.com/aquasecurity/trivy/blob/main/docs/getting-started/signature-verification.md.
 EOF
