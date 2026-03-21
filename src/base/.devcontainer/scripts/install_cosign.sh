@@ -12,7 +12,7 @@ usage() {
   cat <<'EOF'
 Usage: install_cosign.sh [version]
 
-Downloads the requested cosign release (default: latest) for Linux amd64, verifies
+Downloads the requested cosign release (default: latest) for Linux amd64 and arm64, verifies
 its signature, and installs it into $INSTALL_DIR (override via INSTALL_DIR env var).
 EOF
 }
@@ -86,7 +86,7 @@ go install github.com/theupdateframework/go-tuf/cmd/tuf-client@latest
 
 # setup tuf-client
 SIGSTORE_ROOT_PATH="$TMP_DIR/sigstore-root.json"
-curl -o "$SIGSTORE_ROOT_PATH" https://raw.githubusercontent.com/sigstore/root-signing/refs/heads/main/metadata/root_history/10.root.json
+curl -fsSL https://raw.githubusercontent.com/sigstore/root-signing/refs/heads/main/metadata/root_history/10.root.json -o "$SIGSTORE_ROOT_PATH"
 tuf-client init https://tuf-repo-cdn.sigstore.dev "$SIGSTORE_ROOT_PATH"
 
 tuf-client get https://tuf-repo-cdn.sigstore.dev artifact.pub > "$ARTIFACT_PATH"
