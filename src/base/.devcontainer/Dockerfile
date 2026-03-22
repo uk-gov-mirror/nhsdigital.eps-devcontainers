@@ -1,6 +1,6 @@
-FROM archlinux:base-20260315.0.500537 AS build
+FROM alpine:3.23.3 AS build
 ARG TARGETARCH
-RUN pacman -Sy --noconfirm cosign bash curl jq
+RUN apk add --no-cache cosign bash curl jq
 COPY scripts/install_trivy.sh /tmp/install_trivy.sh
 RUN case "${TARGETARCH}" in \
         x86_64|amd64) TRIVY_ARCH=64bit ;; \
