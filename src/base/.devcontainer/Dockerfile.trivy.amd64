@@ -1,7 +1,7 @@
 FROM alpine:3.23.3 AS build
 ARG TARGETARCH
 RUN apk add --no-cache cosign bash curl jq
-COPY scripts/install_trivy.sh /tmp/install_trivy.sh
+COPY src/base/.devcontainer/scripts/install_trivy.sh /tmp/install_trivy.sh
 RUN INSTALL_DIR=/tmp/trivy/ ARCH=64bit /tmp/install_trivy.sh
 
 FROM scratch
