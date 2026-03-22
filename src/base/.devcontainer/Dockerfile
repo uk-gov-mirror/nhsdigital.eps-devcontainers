@@ -1,4 +1,4 @@
-FROM archlinux:latest AS build
+FROM archlinux:base-20260315.0.500537 AS build
 ARG TARGETARCH
 RUN pacman -Sy --noconfirm cosign bash curl jq
 COPY scripts/install_trivy.sh /tmp/install_trivy.sh
