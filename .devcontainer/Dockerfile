@@ -1,12 +1,7 @@
-FROM golang:1.26.1-bookworm AS build
+FROM alpine:3.23.3 AS build
 ARG TARGETARCH
-RUN apt-get update && apt-get install -y \
-    jq \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-COPY src/base/.devcontainer/scripts/install_cosign.sh /tmp/install_cosign.sh
+RUN apk add --no-cache cosign bash curl jq
 COPY src/base/.devcontainer/scripts/install_trivy.sh /tmp/install_trivy.sh
-RUN INSTALL_DIR=/usr/local/bin /tmp/install_cosign.sh
 RUN case "${TARGETARCH}" in \
         x86_64|amd64) TRIVY_ARCH=64bit ;; \
         aarch64|arm64) TRIVY_ARCH=ARM64 ;; \
