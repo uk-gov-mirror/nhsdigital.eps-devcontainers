@@ -14,11 +14,17 @@ CERT_IDENTITY="https://github.com/aquasecurity/trivy/.github/workflows/reusable-
 
 usage() {
   cat <<'EOF'
-Usage: install_trivy.sh [output_dir]
+Usage: install_trivy.sh
 
-Downloads Trivy, its sigstore bundle, and checksum into output_dir (default: current directory),
-then verifies the checksum and the sigstore bundle, following
-https://github.com/aquasecurity/trivy/blob/main/docs/getting-started/signature-verification.md.
+Downloads the Trivy archive and its sigstore bundle to a temporary directory,
+verifies the sigstore bundle following
+https://github.com/aquasecurity/trivy/blob/main/docs/getting-started/signature-verification.md,
+and installs the trivy binary into INSTALL_DIR (default: /usr/local/bin).
+
+Environment variables:
+  INSTALL_DIR  Directory to install the trivy binary into (default: /usr/local/bin)
+  VERSION      Trivy version tag to install (default: v0.69.3)
+  ARCH         Architecture suffix used in the download (default: 64bit)
 EOF
 }
 
@@ -27,7 +33,7 @@ if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
   exit 0
 fi
 
-for cmd in curl cosign sha256sum; do
+for cmd in curl cosign; do
   if ! command -v "$cmd" >/dev/null 2>&1; then
     echo "Error: $cmd is required but not found in PATH" >&2
     exit 1
