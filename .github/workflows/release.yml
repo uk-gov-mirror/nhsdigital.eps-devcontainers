@@ -20,12 +20,16 @@ jobs:
   tag_release:
     needs: [quality_checks, get_config_values]
     uses: NHSDigital/eps-common-workflows/.github/workflows/tag-release-devcontainer.yml@5ac2707dd9cd60ad127275179495b9c890d74711
+    permissions:
+      id-token: write
+      contents: write
     with:
       dry_run: false
       pinned_image: ${{ needs.get_config_values.outputs.pinned_image }}
       branch_name: main
       tag_format: ${{ needs.get_config_values.outputs.tag_format }}
-    secrets: inherit
+    secrets:
+      EXECUTE_JIRA_LAMBDA_ROLE: ${{ secrets.DEV_CLOUD_FORMATION_EXECUTE_LAMBDA_ROLE }}
   build_all_images:
     needs: 
       - tag_release
