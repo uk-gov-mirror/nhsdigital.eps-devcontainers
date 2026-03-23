@@ -1,13 +1,13 @@
-FROM alpine:3.23.3 AS build
-ARG TARGETARCH
-RUN apk add --no-cache cosign bash curl jq
-COPY --chmod=755 scripts/install_trivy.sh /tmp/install_trivy.sh
-RUN case "${TARGETARCH}" in \
-        x86_64|amd64) TRIVY_ARCH=64bit ;; \
-        aarch64|arm64) TRIVY_ARCH=ARM64 ;; \
-        *) echo "Unsupported TARGETARCH: ${TARGETARCH}" && exit 1 ;; \
-    esac \
-    && INSTALL_DIR=/tmp/trivy/ ARCH="${TRIVY_ARCH}" /tmp/install_trivy.sh
+# FROM alpine:3.23.3 AS build
+# ARG TARGETARCH
+# RUN apk add --no-cache cosign bash curl jq
+# COPY --chmod=755 scripts/install_trivy.sh /tmp/install_trivy.sh
+# RUN case "${TARGETARCH}" in \
+#         x86_64|amd64) TRIVY_ARCH=64bit ;; \
+#         aarch64|arm64) TRIVY_ARCH=ARM64 ;; \
+#         *) echo "Unsupported TARGETARCH: ${TARGETARCH}" && exit 1 ;; \
+#     esac \
+#     && INSTALL_DIR=/tmp/trivy/ ARCH="${TRIVY_ARCH}" /tmp/install_trivy.sh
 
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 
@@ -27,7 +27,7 @@ COPY --chmod=755 Mk ${SCRIPTS_DIR}/Mk
 WORKDIR ${SCRIPTS_DIR}/${CONTAINER_NAME}
 RUN ./root_install.sh
 
-COPY --from=build /tmp/trivy/trivy /usr/local/bin/trivy
+# COPY --from=build /tmp/trivy/trivy /usr/local/bin/trivy
 
 COPY --chmod=755 scripts/vscode_install.sh ${SCRIPTS_DIR}/${CONTAINER_NAME}/vscode_install.sh
 USER vscode
