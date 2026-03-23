@@ -65,7 +65,9 @@ jobs:
           fetch-depth: 0
       - name: setup trivy
         run: |
-           docker build  --output=/usr/local/bin/ -f "src/base/.devcontainer/Dockerfile.trivy.${ARCH}" .
+          mkdir -p "$RUNNER_TEMP/bin"
+          docker build  --output="$RUNNER_TEMP/bin" -f "src/base/.devcontainer/Dockerfile.trivy.${ARCH}" .
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
         env:
           ARCH: '${{ matrix.arch }}'
       - name: setup node

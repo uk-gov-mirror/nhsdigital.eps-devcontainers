@@ -1,7 +1,7 @@
 FROM alpine:3.23.3 AS build
 ARG TARGETARCH
 RUN apk add --no-cache cosign bash curl jq
-COPY scripts/install_trivy.sh /tmp/install_trivy.sh
+COPY --chmod=755 scripts/install_trivy.sh /tmp/install_trivy.sh
 RUN case "${TARGETARCH}" in \
         x86_64|amd64) TRIVY_ARCH=64bit ;; \
         aarch64|arm64) TRIVY_ARCH=ARM64 ;; \
