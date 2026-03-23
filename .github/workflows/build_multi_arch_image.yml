@@ -68,8 +68,8 @@ jobs:
       #     mkdir -p "$RUNNER_TEMP/bin"
       #     docker build  --output="$RUNNER_TEMP/bin" -f "src/base/.devcontainer/Dockerfile.trivy.${ARCH}" .
       #     echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
-        env:
-          ARCH: '${{ matrix.arch }}'
+      #  env:
+      #    ARCH: '${{ matrix.arch }}'
       - name: setup node
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
