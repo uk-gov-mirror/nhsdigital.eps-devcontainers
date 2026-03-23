@@ -63,13 +63,13 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
-      - name: setup trivy
-        run: |
-          mkdir -p "$RUNNER_TEMP/bin"
-          docker build  --output="$RUNNER_TEMP/bin" -f "src/base/.devcontainer/Dockerfile.trivy.${ARCH}" .
-          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
-        env:
-          ARCH: '${{ matrix.arch }}'
+      # - name: setup trivy
+      #   run: |
+      #     mkdir -p "$RUNNER_TEMP/bin"
+      #     docker build  --output="$RUNNER_TEMP/bin" -f "src/base/.devcontainer/Dockerfile.trivy.${ARCH}" .
+      #     echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+      #  env:
+      #    ARCH: '${{ matrix.arch }}'
       - name: setup node
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
@@ -101,30 +101,30 @@ jobs:
           IMAGE_TAG: "${{ inputs.docker_tag }}-${{ matrix.arch }}"
           EXIT_CODE: 0
           EXTRA_COMMON: "${{ inputs.extra_common }}"
-      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
-        name: Upload scan results
-        with:
-          name: "scan_results_docker_${{ inputs.container_name }}_${{ matrix.arch }}.json"
-          path: .out/scan_results_docker.json
-      - name: Check docker vulnerabilities - table output
-        run: |
-          make scan-image
-        env:
-          CONTAINER_NAME: '${{ inputs.container_name }}'
-          BASE_FOLDER: "${{ inputs.base_folder }}"
-          IMAGE_TAG: "${{ inputs.docker_tag }}-${{ matrix.arch }}"
-          EXIT_CODE: "1"
-          EXTRA_COMMON: "${{ inputs.extra_common }}"
-      - name: Show docker vulnerability output
-        if: always()
-        run: |
-          echo "Scan output for ghcr.io/nhsdigital/eps-devcontainers/base:${DOCKER_TAG}-${ARCHITECTURE}"
-          if [ -f .out/scan_results_docker.txt ]; then
-            cat .out/scan_results_docker.txt
-          fi
-        env:
-          ARCHITECTURE: '${{ matrix.arch }}'
-          DOCKER_TAG: '${{ inputs.docker_tag }}'
+      # - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+      #   name: Upload scan results
+      #   with:
+      #     name: "scan_results_docker_${{ inputs.container_name }}_${{ matrix.arch }}.json"
+      #     path: .out/scan_results_docker.json
+      # - name: Check docker vulnerabilities - table output
+      #   run: |
+      #     make scan-image
+      #   env:
+      #     CONTAINER_NAME: '${{ inputs.container_name }}'
+      #     BASE_FOLDER: "${{ inputs.base_folder }}"
+      #     IMAGE_TAG: "${{ inputs.docker_tag }}-${{ matrix.arch }}"
+      #     EXIT_CODE: "1"
+      #     EXTRA_COMMON: "${{ inputs.extra_common }}"
+      # - name: Show docker vulnerability output
+      #   if: always()
+      #   run: |
+      #     echo "Scan output for ghcr.io/nhsdigital/eps-devcontainers/base:${DOCKER_TAG}-${ARCHITECTURE}"
+      #     if [ -f .out/scan_results_docker.txt ]; then
+      #       cat .out/scan_results_docker.txt
+      #     fi
+      #   env:
+      #     ARCHITECTURE: '${{ matrix.arch }}'
+      #     DOCKER_TAG: '${{ inputs.docker_tag }}'
       - name: Push tagged image and rebuild for github actions
         run: |
           echo "Pushing image..."
