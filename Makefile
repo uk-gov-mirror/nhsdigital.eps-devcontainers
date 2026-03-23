@@ -138,3 +138,6 @@ lint-githubaction-scripts:
 clean:
 	rm -rf .out
 	find . -type f -name '.trivyignore_combined.yaml' -delete
+
+%:
+	@$(MAKE) -f /usr/local/share/eps/Mk/common.mk $@

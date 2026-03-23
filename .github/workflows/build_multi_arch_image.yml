@@ -73,7 +73,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version-file: .tool-versions
+          node-version: '24.14.0'
   
       - name: make install
         run: |
