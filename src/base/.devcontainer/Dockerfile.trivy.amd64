@@ -1,0 +1,8 @@
+FROM alpine:3.23.3 AS build
+RUN apk add --no-cache cosign bash curl jq
+COPY --chmod=755 src/base/.devcontainer/scripts/install_trivy.sh /tmp/install_trivy.sh
+RUN INSTALL_DIR=/tmp/trivy/ ARCH=64bit /tmp/install_trivy.sh
+
+FROM scratch
+COPY --from=build /tmp/trivy/trivy /
+ENTRYPOINT ["/trivy"]
