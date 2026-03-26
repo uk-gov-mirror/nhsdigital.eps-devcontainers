@@ -1,14 +1,3 @@
-# FROM alpine:3.23.3 AS build
-# ARG TARGETARCH
-# RUN apk add --no-cache cosign bash curl jq
-# COPY --chmod=755 scripts/install_trivy.sh /tmp/install_trivy.sh
-# RUN case "${TARGETARCH}" in \
-#         x86_64|amd64) TRIVY_ARCH=64bit ;; \
-#         aarch64|arm64) TRIVY_ARCH=ARM64 ;; \
-#         *) echo "Unsupported TARGETARCH: ${TARGETARCH}" && exit 1 ;; \
-#     esac \
-#     && INSTALL_DIR=/tmp/trivy/ ARCH="${TRIVY_ARCH}" /tmp/install_trivy.sh
-
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 
 ARG SCRIPTS_DIR=/usr/local/share/eps
@@ -27,14 +16,12 @@ COPY --chmod=755 Mk ${SCRIPTS_DIR}/Mk
 WORKDIR ${SCRIPTS_DIR}/${CONTAINER_NAME}
 RUN ./root_install.sh
 
-# COPY --from=build /tmp/trivy/trivy /usr/local/bin/trivy
-
 COPY --chmod=755 scripts/vscode_install.sh ${SCRIPTS_DIR}/${CONTAINER_NAME}/vscode_install.sh
 USER vscode
 COPY --chown=vscode:vscode .tool-versions.asdf /home/vscode/.tool-versions.asdf
 COPY --chown=vscode:vscode .tool-versions /home/vscode/.tool-versions
 
-ENV PATH="/home/vscode/.asdf/shims/:/home/vscode/.guard/bin/:$PATH"
+ENV PATH="/home/vscode/.asdf/shims:/home/vscode/.guard/bin:/home/vscode/.cargo/bin:$PATH"
 WORKDIR ${SCRIPTS_DIR}/${CONTAINER_NAME}
 RUN ./vscode_install.sh
 

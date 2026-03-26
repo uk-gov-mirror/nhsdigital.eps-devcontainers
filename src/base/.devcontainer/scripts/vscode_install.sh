@@ -18,12 +18,13 @@ asdf plugin add direnv
 asdf plugin add actionlint
 asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
 asdf plugin add terraform https://github.com/asdf-community/asdf-hashicorp.git
-asdf plugin add trivy https://github.com/zufardhiyaulhaq/asdf-trivy.git
 asdf plugin add yq https://github.com/sudermanjr/asdf-yq.git
+asdf plugin add rust https://github.com/asdf-community/asdf-rust.git
 
 # install cfn-guard
 curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/aws-cloudformation/cloudformation-guard/main/install-guard.sh | sh
 
 # install base asdf versions of common tools
 cd /home/vscode
-asdf install
+RUST_WITHOUT=rust-docs asdf install
+cargo install --locked zizmor@1.23.1
