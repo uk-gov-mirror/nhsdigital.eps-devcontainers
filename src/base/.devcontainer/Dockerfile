@@ -26,7 +26,7 @@ USER vscode
 COPY --chown=vscode:vscode .tool-versions.asdf /home/vscode/.tool-versions.asdf
 COPY --chown=vscode:vscode .tool-versions /home/vscode/.tool-versions
 
-ENV PATH="/home/vscode/.asdf/shims:/home/vscode/.guard/bin:/home/vscode/.cargo/bin:$PATH"
+ENV PATH="/home/vscode/.asdf/shims:/home/vscode/.guard/bin:$PATH"
 WORKDIR ${SCRIPTS_DIR}/${CONTAINER_NAME}
 RUN ./vscode_install.sh
 
