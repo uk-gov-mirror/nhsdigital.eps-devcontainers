@@ -21,6 +21,8 @@ WORKDIR ${SCRIPTS_DIR}/${CONTAINER_NAME}
 RUN ./root_install.sh
 
 COPY --chmod=755 scripts/vscode_install.sh ${SCRIPTS_DIR}/${CONTAINER_NAME}/vscode_install.sh
+# use glob pattern to copy requirements-user.txt if it exists, to avoid build failure if it doesn't
+COPY scripts/requirements-user.tx[t] ${SCRIPTS_DIR}/${CONTAINER_NAME}/requirements-user.txt
 USER vscode
 
 WORKDIR ${SCRIPTS_DIR}/${CONTAINER_NAME}
