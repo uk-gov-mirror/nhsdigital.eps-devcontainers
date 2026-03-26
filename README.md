@@ -46,8 +46,8 @@ asdf install and setup for these so they are available globally as vscode user
  - ruby (for GitHub Pages)
  - yq
 
-Install and setup git-secrets
-Install [zizmor](https://github.com/zizmorcore/zizmor) 
+Install and setup git-secrets.   
+Install [zizmor](https://github.com/zizmorcore/zizmor).
 
 # Using the images
 ## Project setup
