@@ -8,4 +8,5 @@ asdf install python
 asdf install
 
 # install cfn-lint
-pip install --user cfn-lint
+pip install --user cfn-lint@1.47.1
+pip install --user zizmor@1.23.1

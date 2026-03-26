@@ -26,5 +26,4 @@ curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/aws-cloud
 
 # install base asdf versions of common tools
 cd /home/vscode
-RUST_WITHOUT=rust-docs asdf install
-cargo install --locked zizmor@1.23.1
+asdf install
