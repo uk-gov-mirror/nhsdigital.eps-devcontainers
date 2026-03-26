@@ -177,6 +177,7 @@ Check targets (`check.mk`)
 - `actionlint` - runs actionlint against GitHub Actions
 - `secret-scan` - runs git-secrets (including scanning history) against the repository
 - `guard-<ENVIRONMENT_VARIABLE>` - checks if an environment variable is set and errors if it is not
+- `zizmor` runs [zizmor](https://github.com/zizmorcore/zizmor) in the local directory to check github workflows and actions
 
 Credentials targets (`credentials.mk`)
 - `aws-configure` - configures an AWS SSO session
