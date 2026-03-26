@@ -67,7 +67,12 @@ jobs:
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
           node-version: '24.14.0'
-  
+      - name: setup syft and grype
+        run: |
+          mkdir -p "$RUNNER_TEMP/bin"
+          docker build  --output="$RUNNER_TEMP/bin" -f "src/base/.devcontainer/Dockerfile.syft" src/base/.devcontainer/
+          docker build  --output="$RUNNER_TEMP/bin" -f "src/base/.devcontainer/Dockerfile.grype" src/base/.devcontainer/
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
       - name: make install
         run: |
           make install-node
@@ -92,32 +97,28 @@ jobs:
           CONTAINER_NAME: '${{ inputs.container_name }}'
           BASE_FOLDER: "${{ inputs.base_folder }}"
           IMAGE_TAG: "${{ inputs.docker_tag }}-${{ matrix.arch }}"
-          EXIT_CODE: 0
-          EXTRA_COMMON: "${{ inputs.extra_common }}"
-      # - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
-      #   name: Upload scan results
-      #   with:
-      #     name: "scan_results_docker_${{ inputs.container_name }}_${{ matrix.arch }}.json"
-      #     path: .out/scan_results_docker.json
-      # - name: Check docker vulnerabilities - table output
-      #   run: |
-      #     make scan-image
-      #   env:
-      #     CONTAINER_NAME: '${{ inputs.container_name }}'
-      #     BASE_FOLDER: "${{ inputs.base_folder }}"
-      #     IMAGE_TAG: "${{ inputs.docker_tag }}-${{ matrix.arch }}"
-      #     EXIT_CODE: "1"
-      #     EXTRA_COMMON: "${{ inputs.extra_common }}"
-      # - name: Show docker vulnerability output
-      #   if: always()
-      #   run: |
-      #     echo "Scan output for ghcr.io/nhsdigital/eps-devcontainers/base:${DOCKER_TAG}-${ARCHITECTURE}"
-      #     if [ -f .out/scan_results_docker.txt ]; then
-      #       cat .out/scan_results_docker.txt
-      #     fi
-      #   env:
-      #     ARCHITECTURE: '${{ matrix.arch }}'
-      #     DOCKER_TAG: '${{ inputs.docker_tag }}'
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+        name: Upload scan results
+        with:
+          name: "grype_${{ inputs.container_name }}_${{ matrix.arch }}.json"
+          path: .grype_out/grype_${{ inputs.container_name }}_${{ matrix.arch }}.json
+      - name: Check docker vulnerabilities - text output
+        run: |
+          make scan-image
+        env:
+          CONTAINER_NAME: '${{ inputs.container_name }}'
+          BASE_FOLDER: "${{ inputs.base_folder }}"
+          IMAGE_TAG: "${{ inputs.docker_tag }}-${{ matrix.arch }}"
+      - name: Show docker vulnerability output
+        if: always()
+        run: |
+          echo "Scan output for ghcr.io/nhsdigital/eps-devcontainers/base:${DOCKER_TAG}-${ARCHITECTURE}"
+          if [ -f .out/scan_results_docker.txt ]; then
+            cat .out/scan_results_docker.txt
+          fi
+        env:
+          ARCHITECTURE: '${{ matrix.arch }}'
+          DOCKER_TAG: '${{ inputs.docker_tag }}'
       - name: Push tagged image and rebuild for github actions
         run: |
           echo "Pushing image..."
