@@ -1,4 +1,4 @@
-.PHONY: lint test shellcheck cfn-lint cdk-synth cfn-guard-sam-templates cfn-guard-cloudformation cfn-guard-cdk cfn-guard-terraform
+.PHONY: lint test shellcheck cfn-lint cdk-synth cfn-guard-sam-templates cfn-guard-cloudformation cfn-guard-cdk cfn-guard-terraform zizmor
 lint:
 	echo "Not implemented"
 	exit 1
