@@ -2,7 +2,7 @@ name: release workflow
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 18 * * 4"
+    - cron: "0 18 * * 3"
 
 jobs:
   get_config_values:
