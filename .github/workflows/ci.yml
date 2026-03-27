@@ -5,7 +5,7 @@ on:
 
 jobs:
   get_config_values:
-    uses: NHSDigital/eps-common-workflows/.github/workflows/get-repo-config.yml@5ac2707dd9cd60ad127275179495b9c890d74711
+    uses: NHSDigital/eps-common-workflows/.github/workflows/get-repo-config.yml@f2d4d6942115472d3f08316cd25f400b02a9dc69
     with:
       verify_published_from_main_image: true
   quality_checks:
