@@ -4,4 +4,4 @@ src/base/.devcontainer/language_versions/
 .trivyignore_combined.yaml
 .out/
 .envrc
-.grype_out/
+.sbom/

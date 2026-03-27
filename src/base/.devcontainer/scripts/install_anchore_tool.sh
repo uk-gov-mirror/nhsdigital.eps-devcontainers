@@ -9,19 +9,6 @@ CHECKSUMS="${TOOL}_${VERSION}_checksums.txt"
 CHECKSUMS_PEM="${TOOL}_${VERSION}_checksums.txt.pem"
 CHECKSUMS_SIG="${TOOL}_${VERSION}_checksums.txt.sig"
 
-if [ -z "$TOOL" ]
-then
-      echo "\$TOOL is NULL"
-fi
-if [ -z "$ARCH" ]
-then
-      echo "\$ARCH is NULL"
-fi
-if [ -z "$VERSION" ]
-then
-      echo "\$VERSION is NULL"
-fi
-
 usage() {
   cat <<'EOF'
 Usage: install_anchore_tool.sh

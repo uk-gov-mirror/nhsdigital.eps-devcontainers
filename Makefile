@@ -69,7 +69,10 @@ build-syft:
 build-grype:
 	docker build -f src/base/.devcontainer/Dockerfile.grype --tag local_grype src/base/.devcontainer/
 
-build-image: build-syft build-grype guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
+build-grant:
+	docker build -f src/base/.devcontainer/Dockerfile.grant --tag local_grant src/base/.devcontainer/
+
+build-image: build-syft build-grype build-grant guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
 	npx devcontainer build \
 		--workspace-folder ./src/$${BASE_FOLDER}/$${CONTAINER_NAME} \
 		$(NO_CACHE_FLAG) \
@@ -97,8 +100,7 @@ scan-image-json: guard-CONTAINER_NAME guard-BASE_FOLDER guard-IMAGE_TAG
 	grype "${CONTAINER_PREFIX}$${CONTAINER_NAME}:$${IMAGE_TAG}" \
 		--scope all-layers \
 		--output json \
-		--file ".grype_out/grype_${CONTAINER_NAME}_${IMAGE_TAG}.json" \
-		--sort-by severity 
+		--file ".grype_out/grype_${CONTAINER_NAME}_${IMAGE_TAG}.json" 
 
 shell-image: guard-CONTAINER_NAME guard-IMAGE_TAG
 	docker run -it \

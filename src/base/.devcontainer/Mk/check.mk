@@ -94,3 +94,23 @@ guard-%:
 
 zizmor:
 	zizmor .
+
+generate-sbom:
+	syft \
+		--output cyclonedx-json=.sbom/sbom.cdx.json \
+		dir:./
+
+generate-sbom-dev-deps:
+	SYFT_JAVASCRIPT_INCLUDE_DEV_DEPENDENCIES=true syft \
+		--output cyclonedx-json=.sbom/sbom.dev.cdx.json \
+		dir:./
+
+grype-scan: generate-sbom
+	grype .sbom/sbom.cdx.json \
+		 --output json=".sbom/grype_analysis.json"
+
+grant-scan: generate-sbom
+	grant check .sbom/sbom.cdx.json \
+		--output json \
+		--quiet \
+		--output-file ".sbom/grant_analysis.json"

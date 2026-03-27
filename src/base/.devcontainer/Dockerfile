@@ -1,5 +1,6 @@
 FROM local_syft AS syft-build
 FROM local_grype AS grype-build
+FROM local_grant AS grant-build
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 
 ARG SCRIPTS_DIR=/usr/local/share/eps
@@ -20,6 +21,7 @@ RUN ./root_install.sh
 
 COPY --from=syft-build /syft /usr/local/bin/syft
 COPY --from=grype-build /grype /usr/local/bin/grype
+COPY --from=grant-build /grant /usr/local/bin/grant
 
 COPY --chmod=755 scripts/vscode_install.sh ${SCRIPTS_DIR}/${CONTAINER_NAME}/vscode_install.sh
 USER vscode
