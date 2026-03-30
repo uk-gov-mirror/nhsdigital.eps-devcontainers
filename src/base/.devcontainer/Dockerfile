@@ -10,6 +10,7 @@ ENV CONTAINER_NAME=${CONTAINER_NAME}
 ENV TARGETARCH=${TARGETARCH}
 
 COPY .tool-versions.asdf ${SCRIPTS_DIR}/${CONTAINER_NAME}/.tool-versions.asdf
+COPY --chmod=755 scripts/lifecycle/*.sh ${SCRIPTS_DIR}/
 COPY --chmod=755 scripts/root_install.sh ${SCRIPTS_DIR}/${CONTAINER_NAME}/root_install.sh
 COPY --chmod=755 Mk ${SCRIPTS_DIR}/Mk
 

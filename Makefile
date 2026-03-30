@@ -65,8 +65,12 @@ build-all: build-base-image build-node-24-image build-node-24-python-3-10-image 
 	build-regression-tests-image
 
 build-image: guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
+	workspace_folder="$${CONTAINER_NAME}"; \
+	case "$${CONTAINER_NAME}" in \
+		eps_*) workspace_folder="$$(printf '%s' "$${CONTAINER_NAME}" | tr '_' '-')" ;; \
+	esac; \
 	npx devcontainer build \
-		--workspace-folder ./src/$${BASE_FOLDER}/$${CONTAINER_NAME} \
+		--workspace-folder ./src/$${BASE_FOLDER}/$${workspace_folder} \
 		$(NO_CACHE_FLAG) \
 		--push false \
 		--output type=image,name="${CONTAINER_PREFIX}$${CONTAINER_NAME}:$${IMAGE_TAG}",push=false,compression=zstd \
