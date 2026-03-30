@@ -18,7 +18,6 @@ asdf plugin add direnv
 asdf plugin add actionlint
 asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
 asdf plugin add terraform https://github.com/asdf-community/asdf-hashicorp.git
-asdf plugin add trivy https://github.com/zufardhiyaulhaq/asdf-trivy.git
 asdf plugin add yq https://github.com/sudermanjr/asdf-yq.git
 
 # install cfn-guard
