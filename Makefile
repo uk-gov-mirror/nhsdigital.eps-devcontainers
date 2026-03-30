@@ -73,8 +73,12 @@ build-grant:
 	docker build -f src/base/.devcontainer/Dockerfile.grant --tag local_grant src/base/.devcontainer/
 
 build-image: build-syft build-grype build-grant guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
+	workspace_folder="$${CONTAINER_NAME}"; \
+	case "$${CONTAINER_NAME}" in \
+		eps_*) workspace_folder="$$(printf '%s' "$${CONTAINER_NAME}" | tr '_' '-')" ;; \
+	esac; \
 	npx devcontainer build \
-		--workspace-folder ./src/$${BASE_FOLDER}/$${CONTAINER_NAME} \
+		--workspace-folder ./src/$${BASE_FOLDER}/$${workspace_folder} \
 		$(NO_CACHE_FLAG) \
 		--push false \
 		--output type=image,name="${CONTAINER_PREFIX}$${CONTAINER_NAME}:$${IMAGE_TAG}",push=false,compression=zstd \

@@ -13,6 +13,9 @@
       },
       "context": "."
     },
+    "postCreateCommand": "bash ${SCRIPTS_DIR}/post_create.sh",
+    "postStartCommand": "bash ${SCRIPTS_DIR}/post_start.sh",
+    "postAttachCommand": "bash ${SCRIPTS_DIR}/post_attach.sh",
     "features": {}
   }
   

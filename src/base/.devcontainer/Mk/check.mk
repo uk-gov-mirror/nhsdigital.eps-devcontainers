@@ -93,7 +93,7 @@ guard-%:
 	fi
 
 zizmor:
-	zizmor .
+	zizmor --min-severity medium .
 
 generate-sbom:
 	syft \

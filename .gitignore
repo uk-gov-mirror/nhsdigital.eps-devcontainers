@@ -5,3 +5,4 @@ src/base/.devcontainer/language_versions/
 .out/
 .envrc
 .sbom/
+.grype_out/

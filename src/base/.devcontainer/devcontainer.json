@@ -12,6 +12,9 @@
         "IMAGE_TAG": "${localEnv:IMAGE_TAG}"
       }
     },
+    "postCreateCommand": "bash ${SCRIPTS_DIR}/post_create.sh",
+    "postStartCommand": "bash ${SCRIPTS_DIR}/post_start.sh",
+    "postAttachCommand": "bash ${SCRIPTS_DIR}/post_attach.sh",
     "features": {
       "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
         "version": "latest",
