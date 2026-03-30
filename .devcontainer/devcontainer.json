@@ -22,7 +22,7 @@
       "--network=host"
     ],
     "remoteEnv": { "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}" },
-  "postAttachCommand": "git-secrets --register-aws; git-secrets --add-provider -- cat /usr/share/secrets-scanner/nhsd-rules-deny.txt",
+  "postCreateCommand": "bash .devcontainer/../scripts/install-git-secrets.sh",
     "features": {
     },
     "customizations": {
