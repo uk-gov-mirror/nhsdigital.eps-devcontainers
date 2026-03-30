@@ -22,7 +22,9 @@
       "--network=host"
     ],
     "remoteEnv": { "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}" },
-  "postCreateCommand": "bash .devcontainer/../scripts/install-git-secrets.sh",
+    "postCreateCommand": "bash ${SCRIPTS_DIR}/postCreate.sh",
+    "postStartCommand": "bash ${SCRIPTS_DIR}/postStart.sh",
+    "postAttachCommand": "bash ${SCRIPTS_DIR}/postAttach.sh",
     "features": {
     },
     "customizations": {
