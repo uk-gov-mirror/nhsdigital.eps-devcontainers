@@ -1,5 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Script to run as devcontainer postCreateCommand
+set -euo pipefail
 
 # Install git-secrets, register AWS patterns and NHS rules in an idempotent way
 if ! git config --get-all secrets.patterns | grep -Fq AKIA; then
