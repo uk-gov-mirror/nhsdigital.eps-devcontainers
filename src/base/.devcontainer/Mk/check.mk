@@ -132,6 +132,13 @@ grype-scan-local:
 	grype \
 		--fail-on high \
 		.
+
+grype-scan-docker-image: guard-DOCKER_IMAGE
+	grype "${DOCKER_IMAGE}" \
+		--scope all-layers \
+		--sort-by severity \
+		--fail-on high
+
 grant-scan: syft-generate-sbom
 	grant check \
 		.sbom/sbom.cdx.json
