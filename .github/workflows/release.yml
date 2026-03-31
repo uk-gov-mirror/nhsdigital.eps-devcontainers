@@ -10,6 +10,10 @@ jobs:
     uses: NHSDigital/eps-common-workflows/.github/workflows/get-repo-config.yml@f2d4d6942115472d3f08316cd25f400b02a9dc69
     with:
       verify_published_from_main_image: false
+    permissions:
+      attestations: read
+      contents: read
+      packages: read
   quality_checks:
     uses: NHSDigital/eps-common-workflows/.github/workflows/quality-checks-devcontainer.yml@f2d4d6942115472d3f08316cd25f400b02a9dc69
     needs:
