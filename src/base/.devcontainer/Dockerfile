@@ -28,6 +28,7 @@ COPY --chmod=755 scripts/vscode_install.sh ${SCRIPTS_DIR}/${CONTAINER_NAME}/vsco
 USER vscode
 COPY --chown=vscode:vscode .tool-versions.asdf /home/vscode/.tool-versions.asdf
 COPY --chown=vscode:vscode .tool-versions /home/vscode/.tool-versions
+COPY --chown=vscode:vscode .grant.yaml /home/vscode/.grant.yaml
 
 ENV PATH="/home/vscode/.asdf/shims:/home/vscode/.guard/bin:$PATH"
 WORKDIR ${SCRIPTS_DIR}/${CONTAINER_NAME}

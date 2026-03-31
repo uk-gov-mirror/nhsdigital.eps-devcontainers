@@ -95,22 +95,59 @@ guard-%:
 zizmor:
 	zizmor --min-severity medium .
 
-generate-sbom:
+syft-generate-sbom:
 	syft \
 		--output cyclonedx-json=.sbom/sbom.cdx.json \
 		dir:./
 
-generate-sbom-dev-deps:
-	SYFT_JAVASCRIPT_INCLUDE_DEV_DEPENDENCIES=true syft \
+syft-generate-sbom-dev-dependencies:
+	SYFT_JAVASCRIPT_INCLUDE_DEV_DEPENDENCIES=true \
+	syft \
 		--output cyclonedx-json=.sbom/sbom.dev.cdx.json \
 		dir:./
 
-grype-scan: generate-sbom
-	grype .sbom/sbom.cdx.json \
-		 --output json=".sbom/grype_analysis.json"
+grype-scan: syft-generate-sbom
+	grype \
+		--fail-on high \
+		.sbom/sbom.cdx.json 
 
-grant-scan: generate-sbom
+grype-scan-dev-dependencies: syft-generate-sbom-dev-dependencies
+	grype \
+		--fail-on high \
+		.sbom/sbom.dev.cdx.json 
+
+grype-scan-json: syft-generate-sbom
+	grype \
+		--fail-on high \
+		.sbom/sbom.cdx.json \
+		--output json=".sbom/grype_analysis.json"
+
+grype-scan-json-dev-dependencies: syft-generate-sbom-dev-dependencies
+	grype \
+		--fail-on high \
+		.sbom/sbom.dev.cdx.json \
+		--output json=".sbom/grype_analysis.dev.json"
+
+grype-scan-local:
+	grype \
+		--fail-on high \
+		.
+grant-scan: syft-generate-sbom
+	grant check \
+		.sbom/sbom.cdx.json
+
+grant-scan-dev-dependencies: syft-generate-sbom-dev-dependencies
+	grant check \
+		.sbom/sbom.dev.cdx.json
+
+grant-scan-json: syft-generate-sbom
 	grant check .sbom/sbom.cdx.json \
 		--output json \
 		--quiet \
 		--output-file ".sbom/grant_analysis.json"
+
+grant-scan-json-dev-dependencies: syft-generate-sbom-dev-dependencies
+	grant check .sbom/sbom.dev.cdx.json \
+		--output json \
+		--quiet \
+		--output-file ".sbom/grant_analysis.dev.json"
