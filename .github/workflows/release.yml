@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 18 * * 3"
+permissions: {}
 
 jobs:
   get_config_values:

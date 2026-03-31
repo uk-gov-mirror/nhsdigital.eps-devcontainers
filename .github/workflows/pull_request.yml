@@ -3,8 +3,7 @@ name: pull_request
   pull_request:
     branches:
       - main
-env:
-  BRANCH_NAME: '${{ github.event.pull_request.head.ref }}'
+permissions: {}
 jobs:
   dependabot-auto-approve-and-merge:
     needs: quality_checks
@@ -63,7 +62,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
-          ref: '${{ env.BRANCH_NAME }}'
+          persist-credentials: false
       - name: Get Commit ID
         id: commit_id
         run: |
