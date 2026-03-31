@@ -7,8 +7,10 @@ permissions: {}
 jobs:
   dependabot-auto-approve-and-merge:
     needs: quality_checks
-    uses: >-
-      NHSDigital/eps-common-workflows/.github/workflows/dependabot-auto-approve-and-merge.yml@f2d4d6942115472d3f08316cd25f400b02a9dc69
+    uses: NHSDigital/eps-common-workflows/.github/workflows/dependabot-auto-approve-and-merge.yml@f2d4d6942115472d3f08316cd25f400b02a9dc69
+    permissions:
+      contents: write
+      pull-requests: write
     secrets:
       AUTOMERGE_APP_ID: '${{ secrets.AUTOMERGE_APP_ID }}'
       AUTOMERGE_PEM: '${{ secrets.AUTOMERGE_PEM }}'
