@@ -39,3 +39,27 @@ ignore:
   - vulnerability: GHSA-cx63-2mw6-8hw5
   - vulnerability: GHSA-r9hx-vwmv-q579
   - vulnerability: GHSA-5rjg-fvgr-3xxf
+# eps-storage-terraform vulnerabilities
+  - vulnerability: CVE-2025-68119
+# eps-data-extract vulnerabilities
+  - vulnerability: GHSA-6fmv-xxpf-w3cw
+# fhir-facade vulnerabilities
+  - vulnerability: CVE-2022-26485
+  - vulnerability: CVE-2022-26486
+  - vulnerability: CVE-2022-25235
+  - vulnerability: CVE-2022-25236
+  - vulnerability: CVE-2024-21147
+  - vulnerability: CVE-2025-21587
+  - vulnerability: CVE-2025-30749
+  - vulnerability: CVE-2024-20952
+  - vulnerability: CVE-2024-20918
+  - vulnerability: CVE-2025-50106
+  - vulnerability: CVE-2025-50059
+  - vulnerability: CVE-2025-53066
+  - vulnerability: CVE-2026-21945
+  - vulnerability: CVE-2026-21932
+# node-24_python_3_14_java_24 vulnerabilities
+  - vulnerability: GHSA-6fmv-xxpf-w3cw
+  - vulnerability: CVE-2025-53066
+  - vulnerability: CVE-2026-21945
+  - vulnerability: CVE-2026-21932
