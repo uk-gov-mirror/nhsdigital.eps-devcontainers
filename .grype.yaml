@@ -35,3 +35,7 @@ ignore:
   - vulnerability: GHSA-9ppj-qmqm-q256
   - vulnerability: GHSA-qffp-2rhf-9h96 
   - vulnerability: GHSA-83g3-92jg-28cx
+# node_24_python_3_10 vulnerabilities
+  - vulnerability: GHSA-cx63-2mw6-8hw5
+  - vulnerability: GHSA-r9hx-vwmv-q579
+  - vulnerability: GHSA-5rjg-fvgr-3xxf
