@@ -81,6 +81,11 @@ jobs:
       - get_issue_number
       - get_commit_id
     uses: ./.github/workflows/build_all_images.yml 
+    permissions:
+      attestations: write
+      contents: read
+      packages: write
+      id-token: write
     with: 
       docker_tag: 'pr-${{ needs.get_issue_number.outputs.issue_number }}-${{ needs.get_commit_id.outputs.sha_short }}'
       tag_latest: false

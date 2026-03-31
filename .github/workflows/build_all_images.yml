@@ -11,7 +11,11 @@ name: build_all_images
       NO_CACHE:
         required: true
         type: boolean
-permissions: {}
+permissions:
+  attestations: write
+  contents: read
+  packages: write
+  id-token: write
 jobs:
   discover_folders:
     runs-on: ubuntu-latest

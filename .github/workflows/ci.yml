@@ -36,6 +36,11 @@ jobs:
     needs: 
       - tag_release
     uses: ./.github/workflows/build_all_images.yml 
+    permissions:
+      attestations: write
+      contents: read
+      packages: write
+      id-token: write
     with: 
       docker_tag: 'ci-${{ needs.tag_release.outputs.version_tag }}'
       tag_latest: false
