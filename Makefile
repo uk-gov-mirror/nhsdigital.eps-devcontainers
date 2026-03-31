@@ -98,7 +98,8 @@ build-githubactions-image: guard-BASE_IMAGE_NAME guard-BASE_IMAGE_TAG guard-IMAG
 scan-image: guard-CONTAINER_NAME guard-BASE_FOLDER guard-IMAGE_TAG
 	grype "${CONTAINER_PREFIX}$${CONTAINER_NAME}:$${IMAGE_TAG}" \
 		--scope all-layers \
-		--sort-by severity 
+		--sort-by severity \
+		--file ".grype_out/grype_${CONTAINER_NAME}_${IMAGE_TAG}.txt"
 
 scan-image-json: guard-CONTAINER_NAME guard-BASE_FOLDER guard-IMAGE_TAG
 	grype "${CONTAINER_PREFIX}$${CONTAINER_NAME}:$${IMAGE_TAG}" \
