@@ -111,17 +111,6 @@ jobs:
           CONTAINER_NAME: '${{ inputs.container_name }}'
           BASE_FOLDER: "${{ inputs.base_folder }}"
           IMAGE_TAG: "${{ inputs.docker_tag }}-${{ matrix.arch }}"
-      - name: Show docker vulnerability output
-        if: always()
-        run: |
-          echo "Scan output for ghcr.io/nhsdigital/eps-devcontainers/base:${DOCKER_TAG}-${ARCHITECTURE}"
-          if [ -f ".grype_out/grype_${CONTAINER_NAME}_${IMAGE_TAG}.txt" ]; then
-            cat ".grype_out/grype_${CONTAINER_NAME}_${IMAGE_TAG}.txt"
-          fi
-        env:
-          CONTAINER_NAME: '${{ inputs.container_name }}'
-          ARCHITECTURE: '${{ matrix.arch }}'
-          DOCKER_TAG: '${{ inputs.docker_tag }}'
       - name: Push tagged image and rebuild for github actions
         run: |
           echo "Pushing image..."
