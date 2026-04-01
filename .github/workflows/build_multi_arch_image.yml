@@ -102,8 +102,8 @@ jobs:
       - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
         name: Upload scan results
         with:
-          name: "grype_${{ inputs.container_name }}_${{ matrix.arch }}.json"
-          path: .grype_out/grype_${{ inputs.container_name }}_${{ matrix.arch }}.json
+          name: "grype_${{ inputs.container_name }}_${{ inputs.docker_tag }}-${{ matrix.arch }}.json"
+          path: .grype_out/grype_${{ inputs.container_name }}_${{ inputs.docker_tag }}-${{ matrix.arch }}.json
       - name: Check docker vulnerabilities - text output
         run: |
           make scan-image
