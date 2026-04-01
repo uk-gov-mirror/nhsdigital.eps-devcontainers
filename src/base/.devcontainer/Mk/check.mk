@@ -135,6 +135,7 @@ grype-scan-json-dev-dependencies: syft-generate-sbom-dev-dependencies
 grype-scan-local:
 	grype \
 		--fail-on high \
+		--quiet \
 		.
 
 grype-scan-docker-image: guard-DOCKER_IMAGE
