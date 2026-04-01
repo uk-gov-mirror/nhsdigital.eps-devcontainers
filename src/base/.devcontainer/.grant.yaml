@@ -1,0 +1,18 @@
+allow:
+  - MIT*
+  - Apache-*
+  - BSD-*-Clause
+  - BSD-3-Clause
+  - ISC*
+  - 0BSD
+  - Unlicense
+  - CC0-*
+  - BlueOak-*
+  - BSD
+  - MPL-*
+  - CC-BY-*
+  - Python-*
+  - Artistic-*
+ignore-packages:
+  - "case"
+require-license: false

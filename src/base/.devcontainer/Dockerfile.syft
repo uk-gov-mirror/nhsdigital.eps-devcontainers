@@ -1,0 +1,16 @@
+FROM alpine:3.23.3 AS build
+ARG TARGETARCH
+ARG SYFT_VERSION="1.42.3"
+ENV SYFT_VERSION=${SYFT_VERSION}
+RUN apk add --no-cache cosign bash curl jq
+COPY --chmod=755 scripts/install_anchore_tool.sh /tmp/install_anchore_tool.sh
+RUN case "${TARGETARCH}" in \
+        x86_64|amd64) ANCHORE_ARCH=amd64 ;; \
+        aarch64|arm64) ANCHORE_ARCH=arm64 ;; \
+        *) echo "Unsupported TARGETARCH: ${TARGETARCH}" && exit 1 ;; \
+    esac \
+    && INSTALL_DIR=/tmp/anchore/ TOOL=syft ARCH="${ANCHORE_ARCH}" VERSION="${SYFT_VERSION}" /tmp/install_anchore_tool.sh
+
+FROM scratch
+COPY --from=build /tmp/anchore/syft /syft
+ENTRYPOINT ["/syft"]
