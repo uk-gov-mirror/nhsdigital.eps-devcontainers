@@ -96,12 +96,14 @@ zizmor:
 	zizmor --min-severity medium .
 
 syft-generate-sbom:
+	mkdir -p .sbom
 	syft \
 		--exclude './.github/**' \
 		--output cyclonedx-json=.sbom/sbom.cdx.json \
 		dir:./
 
 syft-generate-sbom-dev-dependencies:
+	mkdir -p .sbom
 	SYFT_JAVASCRIPT_INCLUDE_DEV_DEPENDENCIES=true \
 	syft \
 		--exclude './.github/**' \
