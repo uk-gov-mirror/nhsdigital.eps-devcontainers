@@ -97,12 +97,14 @@ zizmor:
 
 syft-generate-sbom:
 	syft \
+		--exclude './.github/**' \
 		--output cyclonedx-json=.sbom/sbom.cdx.json \
 		dir:./
 
 syft-generate-sbom-dev-dependencies:
 	SYFT_JAVASCRIPT_INCLUDE_DEV_DEPENDENCIES=true \
 	syft \
+		--exclude './.github/**' \
 		--output cyclonedx-json=.sbom/sbom.dev.cdx.json \
 		dir:./
 
@@ -141,20 +143,24 @@ grype-scan-docker-image: guard-DOCKER_IMAGE
 
 grant-scan: syft-generate-sbom
 	grant check \
+		--dry-run \
 		.sbom/sbom.cdx.json
 
 grant-scan-dev-dependencies: syft-generate-sbom-dev-dependencies
 	grant check \
+		--dry-run \
 		.sbom/sbom.dev.cdx.json
 
 grant-scan-json: syft-generate-sbom
 	grant check .sbom/sbom.cdx.json \
 		--output json \
 		--quiet \
+		--dry-run \
 		--output-file ".sbom/grant_analysis.json"
 
 grant-scan-json-dev-dependencies: syft-generate-sbom-dev-dependencies
 	grant check .sbom/sbom.dev.cdx.json \
 		--output json \
 		--quiet \
+		--dry-run \
 		--output-file ".sbom/grant_analysis.dev.json"
