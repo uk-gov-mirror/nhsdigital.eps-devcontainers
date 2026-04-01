@@ -64,7 +64,15 @@ build-all: build-base-image build-node-24-image build-node-24-python-3-10-image 
 	build-eps-storage-terraform-image build-eps-data-extract-image build-fhir-facade-image build-node-24-python-3-14-golang-1-24-image build-node-24-python-3-14-java-24-image \
 	build-regression-tests-image
 
-build-image: guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
+build-syft:
+	docker build -f src/base/.devcontainer/Dockerfile.syft --tag local_syft:latest src/base/.devcontainer/
+build-grype:
+	docker build -f src/base/.devcontainer/Dockerfile.grype --tag local_grype:latest src/base/.devcontainer/
+
+build-grant:
+	docker build -f src/base/.devcontainer/Dockerfile.grant --tag local_grant:latest src/base/.devcontainer/
+
+build-image: build-syft build-grype build-grant guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
 	workspace_folder="$${CONTAINER_NAME}"; \
 	case "$${CONTAINER_NAME}" in \
 		eps_*) workspace_folder="$$(printf '%s' "$${CONTAINER_NAME}" | tr '_' '-')" ;; \
@@ -86,12 +94,17 @@ build-githubactions-image: guard-BASE_IMAGE_NAME guard-BASE_IMAGE_TAG guard-IMAG
 		--load \
 		-t "${CONTAINER_PREFIX}$${BASE_IMAGE_NAME}:githubactions-$${IMAGE_TAG}" \
 		.
-
-scan-image: guard-CONTAINER_NAME guard-BASE_FOLDER
-	echo "Not implemented"
+scan-image: guard-CONTAINER_NAME guard-BASE_FOLDER guard-IMAGE_TAG
+	grype "${CONTAINER_PREFIX}$${CONTAINER_NAME}:$${IMAGE_TAG}" \
+		--scope all-layers \
+		--sort-by severity \
+		--fail-on high
 
 scan-image-json: guard-CONTAINER_NAME guard-BASE_FOLDER guard-IMAGE_TAG
-	echo "Not implemented"
+	grype "${CONTAINER_PREFIX}$${CONTAINER_NAME}:$${IMAGE_TAG}" \
+		--scope all-layers \
+		--output json \
+		--file ".grype_out/grype_${CONTAINER_NAME}_${IMAGE_TAG}.json" 
 
 shell-image: guard-CONTAINER_NAME guard-IMAGE_TAG
 	docker run -it \

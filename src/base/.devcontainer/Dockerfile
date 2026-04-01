@@ -1,3 +1,6 @@
+FROM local_syft:latest AS syft-build
+FROM local_grype:latest AS grype-build
+FROM local_grant:latest AS grant-build
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 
 ARG SCRIPTS_DIR=/usr/local/share/eps
@@ -17,10 +20,15 @@ COPY --chmod=755 Mk ${SCRIPTS_DIR}/Mk
 WORKDIR ${SCRIPTS_DIR}/${CONTAINER_NAME}
 RUN ./root_install.sh
 
+COPY --from=syft-build /syft /usr/local/bin/syft
+COPY --from=grype-build /grype /usr/local/bin/grype
+COPY --from=grant-build /grant /usr/local/bin/grant
+
 COPY --chmod=755 scripts/vscode_install.sh ${SCRIPTS_DIR}/${CONTAINER_NAME}/vscode_install.sh
 USER vscode
 COPY --chown=vscode:vscode .tool-versions.asdf /home/vscode/.tool-versions.asdf
 COPY --chown=vscode:vscode .tool-versions /home/vscode/.tool-versions
+COPY --chown=vscode:vscode .grant.yaml /home/vscode/.grant.yaml
 
 ENV PATH="/home/vscode/.asdf/shims:/home/vscode/.guard/bin:$PATH"
 WORKDIR ${SCRIPTS_DIR}/${CONTAINER_NAME}
