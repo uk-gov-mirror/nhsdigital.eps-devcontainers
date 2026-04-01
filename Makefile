@@ -65,12 +65,12 @@ build-all: build-base-image build-node-24-image build-node-24-python-3-10-image 
 	build-regression-tests-image
 
 build-syft:
-	docker build -f src/base/.devcontainer/Dockerfile.syft --tag local_syft src/base/.devcontainer/
+	docker build -f src/base/.devcontainer/Dockerfile.syft --tag local_syft:latest src/base/.devcontainer/
 build-grype:
-	docker build -f src/base/.devcontainer/Dockerfile.grype --tag local_grype src/base/.devcontainer/
+	docker build -f src/base/.devcontainer/Dockerfile.grype --tag local_grype:latest src/base/.devcontainer/
 
 build-grant:
-	docker build -f src/base/.devcontainer/Dockerfile.grant --tag local_grant src/base/.devcontainer/
+	docker build -f src/base/.devcontainer/Dockerfile.grant --tag local_grant:latest src/base/.devcontainer/
 
 build-image: build-syft build-grype build-grant guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
 	workspace_folder="$${CONTAINER_NAME}"; \

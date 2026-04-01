@@ -1,6 +1,6 @@
-FROM local_syft AS syft-build
-FROM local_grype AS grype-build
-FROM local_grant AS grant-build
+FROM local_syft:latest AS syft-build
+FROM local_grype:latest AS grype-build
+FROM local_grant:latest AS grant-build
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 
 ARG SCRIPTS_DIR=/usr/local/share/eps
