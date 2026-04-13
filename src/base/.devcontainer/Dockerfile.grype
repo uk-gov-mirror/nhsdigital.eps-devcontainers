@@ -1,6 +1,6 @@
 FROM alpine:3.23.3 AS build
 ARG TARGETARCH
-ARG GRYPE_VERSION="0.110.0"
+ARG GRYPE_VERSION="0.111.0"
 ENV GRYPE_VERSION=${GRYPE_VERSION}
 RUN apk add --no-cache cosign bash curl jq
 COPY --chmod=755 scripts/install_anchore_tool.sh /tmp/install_anchore_tool.sh
