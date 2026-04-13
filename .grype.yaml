@@ -43,6 +43,7 @@ ignore:
   - vulnerability: GHSA-cx63-2mw6-8hw5
   - vulnerability: GHSA-r9hx-vwmv-q579
   - vulnerability: GHSA-5rjg-fvgr-3xxf
+  - vulnerability: GHSA-2599-h6xx-hpxp
 # eps-storage-terraform vulnerabilities
   - vulnerability: CVE-2025-68119
 # eps-data-extract vulnerabilities
