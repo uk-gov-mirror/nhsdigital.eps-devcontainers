@@ -43,7 +43,7 @@ build-node-24-python-3-14-image:
 	CONTAINER_NAME=node_24_python_3_14 BASE_VERSION_TAG=local-build BASE_FOLDER=languages IMAGE_TAG=local-build $(MAKE) build-image
 
 build-eps-storage-terraform-image:
-	CONTAINER_NAME=eps_storage_terraform BASE_VERSION_TAG=local-build BASE_FOLDER=projects IMAGE_TAG=local-build $(MAKE) build-image
+	CONTAINER_NAME=eps-storage-terraform BASE_VERSION_TAG=local-build BASE_FOLDER=projects IMAGE_TAG=local-build $(MAKE) build-image
 
 build-eps-data-extract-image:
 	CONTAINER_NAME=eps_data_extract BASE_VERSION_TAG=local-build BASE_FOLDER=projects IMAGE_TAG=local-build $(MAKE) build-image
@@ -72,7 +72,14 @@ build-grype:
 build-grant:
 	docker build -f src/base/.devcontainer/Dockerfile.grant --tag local_grant:latest src/base/.devcontainer/
 
-build-image: build-syft build-grype build-grant guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
+build-tflint:
+	docker buildx build \
+		--secret id=GH_TOKEN,env=GITHUB_TOKEN \
+		-f src/projects/eps-storage-terraform/.devcontainer/Dockerfile.tflint \
+		--tag local_tflint:latest \
+		src/projects/eps-storage-terraform/.devcontainer/
+
+build-image: build-syft build-grype build-grant build-tflint guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
 	workspace_folder="$${CONTAINER_NAME}"; \
 	case "$${CONTAINER_NAME}" in \
 		eps_*) workspace_folder="$$(printf '%s' "$${CONTAINER_NAME}" | tr '_' '-')" ;; \

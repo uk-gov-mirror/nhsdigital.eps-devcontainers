@@ -1,6 +1,7 @@
 ARG BASE_VERSION_TAG=latest
 ARG BASE_IMAGE=ghcr.io/nhsdigital/eps-devcontainers/node_24_python_3_13:${BASE_VERSION_TAG}
 
+FROM local_tflint:latest AS tflint-build
 FROM ${BASE_IMAGE}
 
 ARG SCRIPTS_DIR=/usr/local/share/eps
@@ -26,6 +27,7 @@ USER root
 COPY --chmod=755 scripts ${SCRIPTS_DIR}/${CONTAINER_NAME}
 WORKDIR ${SCRIPTS_DIR}/${CONTAINER_NAME}
 RUN ./root_install.sh
+COPY --from=tflint-build /tflint /usr/local/bin/tflint
 
 USER vscode
 

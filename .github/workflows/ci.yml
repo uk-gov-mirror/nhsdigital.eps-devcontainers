@@ -17,6 +17,10 @@ jobs:
     uses: NHSDigital/eps-common-workflows/.github/workflows/quality-checks-devcontainer.yml@f2d4d6942115472d3f08316cd25f400b02a9dc69
     needs:
       - get_config_values
+    permissions:
+      contents: read
+      packages: read
+      id-token: write
     with:
       pinned_image: ${{ needs.get_config_values.outputs.pinned_image }}
     secrets:
