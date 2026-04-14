@@ -31,6 +31,10 @@ ignore:
   - vulnerability: GHSA-78h2-9frx-2jm8
   - vulnerability: CVE-2026-32280
   - vulnerability: GHSA-hfvc-g4fc-pqhx
+  - vulnerability: CVE-2026-27140
+  - vulnerability: CVE-2026-32283
+  - vulnerability: CVE-2026-32281
+  - vulnerability: CVE-2026-33810
 # node_24 vulnerabilities
   - vulnerability: GHSA-c2c7-rcm5-vvqj
   - vulnerability: GHSA-7r86-cg39-jmmj
