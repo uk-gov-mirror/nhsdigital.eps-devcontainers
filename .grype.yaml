@@ -27,6 +27,10 @@ ignore:
   - vulnerability: CVE-2025-58188
   - vulnerability: CVE-2025-4674
   - vulnerability: GHSA-x744-4wpc-v9h2
+  - vulnerability: GHSA-92mm-2pjq-r785
+  - vulnerability: GHSA-78h2-9frx-2jm8
+  - vulnerability: CVE-2026-32280
+  - vulnerability: GHSA-hfvc-g4fc-pqhx
 # node_24 vulnerabilities
   - vulnerability: GHSA-c2c7-rcm5-vvqj
   - vulnerability: GHSA-7r86-cg39-jmmj
@@ -39,6 +43,7 @@ ignore:
   - vulnerability: GHSA-cx63-2mw6-8hw5
   - vulnerability: GHSA-r9hx-vwmv-q579
   - vulnerability: GHSA-5rjg-fvgr-3xxf
+  - vulnerability: GHSA-2599-h6xx-hpxp
 # eps-storage-terraform vulnerabilities
   - vulnerability: CVE-2025-68119
 # eps-data-extract vulnerabilities
