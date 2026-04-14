@@ -12,7 +12,7 @@
     "@devcontainers/cli": "^0.85.0"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.5.2",
     "tsx": "^4.21.0"
   }
 }
