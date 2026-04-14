@@ -31,7 +31,7 @@ jobs:
     secrets:
       SONAR_TOKEN: '${{ secrets.SONAR_TOKEN }}'
   pr_title_format_check:
-    uses: NHSDigital/eps-common-workflows/.github/workflows/pr_title_check.yml@f2d4d6942115472d3f08316cd25f400b02a9dc69
+    uses: NHSDigital/eps-common-workflows/.github/workflows/pr_title_check.yml@e798d5aee897de6f7dc387dd5623fcd9ba4c8929
     permissions:
       pull-requests: write
   get_issue_number:
