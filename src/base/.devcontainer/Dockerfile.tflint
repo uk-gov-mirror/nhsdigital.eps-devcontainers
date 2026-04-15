@@ -1,0 +1,24 @@
+FROM serversideup/github-cli:2.89.0 AS build
+ARG TARGETARCH
+ARG TFLINT_VERSION="v0.61.0"
+COPY --chmod=755 scripts/install_github_release.sh /tmp/install_github_release.sh
+RUN --mount=type=secret,id=GH_TOKEN,env=GH_TOKEN \
+    case "${TARGETARCH}" in \
+        x86_64|amd64) DOWNLOAD_BINARY=tflint_linux_amd64.zip ;; \
+        aarch64|arm64) DOWNLOAD_BINARY=tflint_linux_arm64.zip ;; \
+        *) echo "Unsupported TARGETARCH: ${TARGETARCH}" && exit 1 ;; \
+    esac \
+    && INSTALL_DIR=/tmp/tflint/ \
+    ARCH="${TARGETARCH}" \
+    VERSION="${TFLINT_VERSION}" \
+    GITHUB_REPO="terraform-linters/tflint" \
+    TOOL="tflint" \ 
+    DOWNLOAD_BINARY="${DOWNLOAD_BINARY}" \
+    VERIFY_BINARY_ATTESTATION="false" \
+    VERIFY_CHECKSUM="true" \
+    COMPRESSION="zip" \
+    /tmp/install_github_release.sh
+
+FROM scratch
+COPY --from=build /tmp/tflint/tflint /tflint
+ENTRYPOINT ["/tflint"]

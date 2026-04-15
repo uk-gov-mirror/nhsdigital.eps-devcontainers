@@ -21,7 +21,9 @@
         "moby": "true",
         "installDockerBuildx": "true"
       },
+      // fine to use github-cli feature here as it verifies the installation
       "ghcr.io/devcontainers/features/github-cli:1": {},
+      // fine to use aws-cli feature here as it verifies the installation
        "ghcr.io/devcontainers/features/aws-cli:1": {
           "version": "latest"
        }

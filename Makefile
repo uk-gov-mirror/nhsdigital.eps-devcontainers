@@ -91,10 +91,23 @@ build-tflint:
 	else \
 		docker buildx build \
 			--secret id=GH_TOKEN,env=GITHUB_TOKEN \
-			-f src/projects/eps-storage-terraform/.devcontainer/Dockerfile.tflint \
+			-f src/base/.devcontainer/Dockerfile.tflint \
 			--tag local_tflint:latest \
-			src/projects/eps-storage-terraform/.devcontainer/; \
+			src/base/.devcontainer/; \
 	fi
+
+build-zizmor:
+	@if docker image inspect local_zizmor:latest >/dev/null 2>&1; then \
+		echo "Image local_zizmor:latest already exists. Skipping build."; \
+	else \
+		docker buildx build \
+			--secret id=GH_TOKEN,env=GITHUB_TOKEN \
+			-f src/base/.devcontainer/Dockerfile.zizmor \
+			--tag local_zizmor:latest \
+			src/base/.devcontainer/; \
+	fi
+
+build-tools: build-syft build-grype build-grant build-tflint build-zizmor
 
 build-image: build-syft build-grype build-grant build-tflint guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
 	workspace_folder="$${CONTAINER_NAME}"; \

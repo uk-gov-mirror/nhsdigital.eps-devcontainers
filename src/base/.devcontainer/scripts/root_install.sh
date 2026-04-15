@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+
 export DEBIAN_FRONTEND=noninteractive
 
 # Add amd64 architecture if on arm64
@@ -31,18 +32,8 @@ apt-get -y install --no-install-recommends htop vim curl git build-essential \
     libreadline-dev wget llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev liblzma-dev netcat-traditional libyaml-dev uuid-runtime xxd unzip
 
-# Download correct SAM CLI for arch
-echo "Installing aws-sam cli"
-if [ "$TARGETARCH" = "arm64" ] || [ "$TARGETARCH" = "aarch64" ]; then
-      wget -O /tmp/aws-sam-cli.zip --no-verbose "https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-arm64.zip"
-    else
-      wget -O /tmp/aws-sam-cli.zip --no-verbose "https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip"
-    fi
-    unzip -q /tmp/aws-sam-cli.zip -d /tmp/aws-sam-cli
-    /tmp/aws-sam-cli/install
-    rm /tmp/aws-sam-cli.zip
-    rm -rf /tmp/aws-sam-cli
-
+# install AWS SAM CLI
+VERSION="${SAM_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_aws_sam_cli.sh"
 # Install ASDF
 echo "Installing asdf"
 ASDF_VERSION=$(awk '!/^#/ && NF {print $1; exit}' "${SCRIPTS_DIR}/${CONTAINER_NAME}/.tool-versions.asdf")
