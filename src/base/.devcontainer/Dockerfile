@@ -9,16 +9,18 @@ ARG CONTAINER_NAME
 ARG IMAGE_TAG
 ARG TARGETARCH
 ARG SAM_VERSION="v1.158.0"
+ARG ASDF_VERSION="v0.18.1"
 
 ENV SCRIPTS_DIR=${SCRIPTS_DIR}
 ENV CONTAINER_NAME=${CONTAINER_NAME}
 ENV TARGETARCH=${TARGETARCH}
 ENV SAM_VERSION=${SAM_VERSION}
+ENV ASDF_VERSION=${ASDF_VERSION}
 
-COPY .tool-versions.asdf ${SCRIPTS_DIR}/${CONTAINER_NAME}/.tool-versions.asdf
 COPY --chmod=755 scripts/lifecycle/*.sh ${SCRIPTS_DIR}/
 COPY --chmod=755 scripts/root_install.sh ${SCRIPTS_DIR}/${CONTAINER_NAME}/root_install.sh
 COPY --chmod=755 scripts/install_aws_sam_cli.sh ${SCRIPTS_DIR}/${CONTAINER_NAME}/install_aws_sam_cli.sh
+COPY --chmod=755 scripts/install_asdf.sh ${SCRIPTS_DIR}/${CONTAINER_NAME}/install_asdf.sh
 COPY --chmod=755 Mk ${SCRIPTS_DIR}/Mk
 
 WORKDIR ${SCRIPTS_DIR}/${CONTAINER_NAME}
@@ -30,7 +32,6 @@ COPY --from=grant-build /grant /usr/local/bin/grant
 COPY --from=zizmor-build /zizmor /usr/local/bin/zizmor
 COPY --chmod=755 scripts/vscode_install.sh ${SCRIPTS_DIR}/${CONTAINER_NAME}/vscode_install.sh
 USER vscode
-COPY --chown=vscode:vscode .tool-versions.asdf /home/vscode/.tool-versions.asdf
 COPY --chown=vscode:vscode .tool-versions /home/vscode/.tool-versions
 COPY --chown=vscode:vscode .grant.yaml /home/vscode/.grant.yaml
 

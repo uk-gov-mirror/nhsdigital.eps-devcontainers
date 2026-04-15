@@ -36,17 +36,7 @@ apt-get -y install --no-install-recommends htop vim curl git build-essential \
 VERSION="${SAM_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_aws_sam_cli.sh"
 # Install ASDF
 echo "Installing asdf"
-ASDF_VERSION=$(awk '!/^#/ && NF {print $1; exit}' "${SCRIPTS_DIR}/${CONTAINER_NAME}/.tool-versions.asdf")
-if [ "$TARGETARCH" = "arm64" ] || [ "$TARGETARCH" == "aarch64" ]; then
-    wget -O /tmp/asdf.tar.gz --no-verbose "https://github.com/asdf-vm/asdf/releases/download/v${ASDF_VERSION}/asdf-v${ASDF_VERSION}-linux-arm64.tar.gz"
-else
-    wget -O /tmp/asdf.tar.gz --no-verbose "https://github.com/asdf-vm/asdf/releases/download/v${ASDF_VERSION}/asdf-v${ASDF_VERSION}-linux-amd64.tar.gz"
-fi
-tar -xzf /tmp/asdf.tar.gz -C /tmp
-mkdir -p /usr/bin
-mv /tmp/asdf /usr/bin/asdf
-chmod +x /usr/bin/asdf
-rm -rf /tmp/asdf.tar.gz 
+VERSION="${ASDF_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_asdf.sh"
 
 # install gitsecrets
 git clone https://github.com/awslabs/git-secrets.git /tmp/git-secrets
