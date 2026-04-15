@@ -40,7 +40,16 @@ jobs:
     # as it uses a 3rd party docker image with github cli installed to verify attestation of tflint binary
     # and we dont want to make a high scoped token available to that image
     # token needs attestation read so it can verify attestation of tflint binary
-    runs-on: ubuntu-22.04
+    name: Build tool images for on ${{ matrix.arch }}
+    runs-on: '${{ matrix.runner }}'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-22.04
+          - arch: arm64
+            runner: ubuntu-22.04-arm
     permissions:
       contents: read
       attestations: read
@@ -73,7 +82,7 @@ jobs:
       - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
         name: Upload docker images
         with:
-          name: docker_artifact
+          name: docker_artifact_${{ matrix.arch }}
           path: |
             grype_image.tar
             syft_image.tar

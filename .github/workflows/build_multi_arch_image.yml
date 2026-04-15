@@ -46,10 +46,10 @@ jobs:
           df -h
           echo "Freeing up disk space for docker build..."
 
-          rm -rf /usr/local/lib/android || true
-          rm -rf /opt/android || true
-          rm -rf /usr/local/android-sdk || true
-          rm -rf /home/runner/Android || true
+          sudo rm -rf /usr/local/lib/android || true
+          sudo rm -rf /opt/android || true
+          sudo rm -rf /usr/local/android-sdk || true
+          sudo rm -rf /home/runner/Android || true
           
           # Remove Android packages if they exist
           ANDROID_PACKAGES=$(dpkg -l | grep -E "^ii.*(android|adb)" | awk '{print $2}' | tr '\n' ' ' || true)
@@ -65,11 +65,11 @@ jobs:
           df -h
           echo "Freeing up disk space for docker build..."
 
-          rm -rf /opt/ghc || true
-          rm -rf /usr/local/.ghcup || true
-          rm -rf /opt/cabal || true
-          rm -rf /home/runner/.ghcup || true
-          rm -rf /home/runner/.cabal || true
+          sudo rm -rf /opt/ghc || true
+          sudo rm -rf /usr/local/.ghcup || true
+          sudo rm -rf /opt/cabal || true
+          sudo rm -rf /home/runner/.ghcup || true
+          sudo rm -rf /home/runner/.cabal || true
           
           # Remove Haskell packages if they exist
           HASKELL_PACKAGES=$(dpkg -l | grep -E "^ii.*(ghc|haskell|cabal)" | awk '{print $2}' | tr '\n' ' ' || true)
@@ -87,10 +87,10 @@ jobs:
           echo "Freeing up disk space for docker build..."
 
           # Remove .NET installation directories
-          rm -rf /usr/share/dotnet || true
+          sudo rm -rf /usr/share/dotnet || true
           
           # Remove .NET documentation directories
-          rm -rf /usr/share/doc/dotnet-* || true
+          sudo rm -rf /usr/share/doc/dotnet-* || true
           
           # Remove .NET packages if they exist
           DOTNET_PACKAGES=$(dpkg -l | grep -E "^ii.*dotnet" | awk '{print $2}' | tr '\n' ' ' || true)
@@ -137,7 +137,7 @@ jobs:
       - name: docker_artifact download
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
-          name: docker_artifact
+          name: docker_artifact_${{ matrix.arch }}
           path: images/
       - name: extract docker images
         run: |
