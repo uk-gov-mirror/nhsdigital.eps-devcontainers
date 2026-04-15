@@ -11,14 +11,10 @@ name: build_all_images
       NO_CACHE:
         required: true
         type: boolean
-permissions:
-  attestations: write
-  contents: read
-  packages: write
-  id-token: write
+permissions: {}
 jobs:
   discover_folders:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       base_node_folders: ${{ steps.find-folders.outputs.base_node }}
       node_24_language_folders: ${{ steps.find-folders.outputs.node_24_languages }}
@@ -39,8 +35,67 @@ jobs:
             echo "projects=$project_folders"
           } >> "$GITHUB_OUTPUT"
 
+  build_tool_images:
+    # build common tool images with a lower scoped github token
+    # as it uses a 3rd party docker image with github cli installed to verify attestation of tflint binary
+    # and we dont want to make a high scoped token available to that image
+    # token needs attestation read so it can verify attestation of tflint binary
+    name: Build tool images for on ${{ matrix.arch }}
+    runs-on: '${{ matrix.runner }}'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-22.04
+          - arch: arm64
+            runner: ubuntu-22.04-arm
+    permissions:
+      contents: read
+      attestations: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: build_grype
+        run: |
+          make build-grype
+          docker save "local_grype:latest" -o grype_image.tar
+      - name: build_syft
+        run: |
+          make build-syft
+          docker save "local_syft:latest" -o syft_image.tar
+      - name: build_grant
+        run: |
+          make build-grant
+          docker save "local_grant:latest" -o grant_image.tar
+
+      - name: build_tflint
+        run: |
+          make build-tflint
+          docker save "local_tflint:latest" -o tflint_image.tar
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+        name: Upload docker images
+        with:
+          name: docker_artifact_${{ matrix.arch }}
+          path: |
+            grype_image.tar
+            syft_image.tar
+            grant_image.tar
+            tflint_image.tar
   package_base_docker_image:
     uses: ./.github/workflows/build_multi_arch_image.yml
+    permissions:
+      attestations: write
+      contents: read
+      packages: write
+      id-token: write
+    needs: [build_tool_images]
     with:
       tag_latest: ${{ inputs.tag_latest }}
       docker_tag: ${{ inputs.docker_tag }}
@@ -51,6 +106,11 @@ jobs:
     needs:
       - package_base_docker_image
       - discover_folders
+    permissions:
+      attestations: write
+      contents: read
+      packages: write
+      id-token: write
     strategy:
       fail-fast: false
       matrix:
@@ -68,6 +128,11 @@ jobs:
       - package_base_docker_image
       - package_base_node_images
       - discover_folders
+    permissions:
+      attestations: write
+      contents: read
+      packages: write
+      id-token: write
     strategy:
       fail-fast: false
       matrix:
@@ -84,6 +149,11 @@ jobs:
     needs:
       - package_node_24_language_docker_images
       - discover_folders
+    permissions:
+      attestations: write
+      contents: read
+      packages: write
+      id-token: write
     strategy:
       fail-fast: false
       matrix:

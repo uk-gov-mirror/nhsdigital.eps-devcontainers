@@ -12,14 +12,15 @@ guard-%:
 
 .PHONY: install install-python install-node install-hooks build-base-image build-node-24-image build-node-24-python-3-10-image build-node-24-python-3-12-image build-node-24-python-3-13-image build-node-24-python-3-14-image \
 	build-eps-storage-terraform-image build-eps-data-extract-image build-fhir-facade-image build-node-24-python-3-14-golang-1-24-image build-node-24-python-3-14-java-24-image \
-	build-regression-tests-image build-all build-image build-githubactions-image scan-image scan-image-json shell-image lint test lint-githubactions lint-githubaction-scripts clean
+	build-regression-tests-image build-all build-image build-githubactions-image scan-image scan-image-json shell-image lint test lint-githubactions lint-githubaction-scripts clean \
+	build-syft build-grype build-grant build-tflint
 install: install-python install-node install-hooks
 
 install-python:
 	poetry install
 
 install-node:
-	npm install
+	npm ci --ignore-scripts
 
 install-hooks: install-python
 	poetry run pre-commit install --install-hooks --overwrite
@@ -43,7 +44,7 @@ build-node-24-python-3-14-image:
 	CONTAINER_NAME=node_24_python_3_14 BASE_VERSION_TAG=local-build BASE_FOLDER=languages IMAGE_TAG=local-build $(MAKE) build-image
 
 build-eps-storage-terraform-image:
-	CONTAINER_NAME=eps_storage_terraform BASE_VERSION_TAG=local-build BASE_FOLDER=projects IMAGE_TAG=local-build $(MAKE) build-image
+	CONTAINER_NAME=eps-storage-terraform BASE_VERSION_TAG=local-build BASE_FOLDER=projects IMAGE_TAG=local-build $(MAKE) build-image
 
 build-eps-data-extract-image:
 	CONTAINER_NAME=eps_data_extract BASE_VERSION_TAG=local-build BASE_FOLDER=projects IMAGE_TAG=local-build $(MAKE) build-image
@@ -65,14 +66,37 @@ build-all: build-base-image build-node-24-image build-node-24-python-3-10-image 
 	build-regression-tests-image
 
 build-syft:
-	docker build -f src/base/.devcontainer/Dockerfile.syft --tag local_syft:latest src/base/.devcontainer/
+	@if docker image inspect local_syft:latest >/dev/null 2>&1; then \
+		echo "Image local_syft:latest already exists. Skipping build."; \
+	else \
+		docker build -f src/base/.devcontainer/Dockerfile.syft --tag local_syft:latest src/base/.devcontainer/; \
+	fi
 build-grype:
-	docker build -f src/base/.devcontainer/Dockerfile.grype --tag local_grype:latest src/base/.devcontainer/
+	@if docker image inspect local_grype:latest >/dev/null 2>&1; then \
+		echo "Image local_grype:latest already exists. Skipping build."; \
+	else \
+		docker build -f src/base/.devcontainer/Dockerfile.grype --tag local_grype:latest src/base/.devcontainer/; \
+	fi
 
 build-grant:
-	docker build -f src/base/.devcontainer/Dockerfile.grant --tag local_grant:latest src/base/.devcontainer/
+	@if docker image inspect local_grant:latest >/dev/null 2>&1; then \
+		echo "Image local_grant:latest already exists. Skipping build."; \
+	else \
+		docker build -f src/base/.devcontainer/Dockerfile.grant --tag local_grant:latest src/base/.devcontainer/; \
+	fi
 
-build-image: build-syft build-grype build-grant guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
+build-tflint:
+	@if docker image inspect local_tflint:latest >/dev/null 2>&1; then \
+		echo "Image local_tflint:latest already exists. Skipping build."; \
+	else \
+		docker buildx build \
+			--secret id=GH_TOKEN,env=GITHUB_TOKEN \
+			-f src/projects/eps-storage-terraform/.devcontainer/Dockerfile.tflint \
+			--tag local_tflint:latest \
+			src/projects/eps-storage-terraform/.devcontainer/; \
+	fi
+
+build-image: build-syft build-grype build-grant build-tflint guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
 	workspace_folder="$${CONTAINER_NAME}"; \
 	case "$${CONTAINER_NAME}" in \
 		eps_*) workspace_folder="$$(printf '%s' "$${CONTAINER_NAME}" | tr '_' '-')" ;; \
