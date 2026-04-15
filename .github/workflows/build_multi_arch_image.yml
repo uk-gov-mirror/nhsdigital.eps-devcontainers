@@ -41,7 +41,7 @@ jobs:
           - arch: arm64
             runner: ubuntu-22.04-arm
     steps:
-      - name: remove android
+      - name: remove android tools
         run: |
           df -h
           echo "Freeing up disk space for docker build..."
@@ -60,7 +60,7 @@ jobs:
               sudo apt-get clean > /dev/null 2>&1 || true
           fi
           df -h
-      - name: remove haskell
+      - name: remove haskell tools
         run: |
           df -h
           echo "Freeing up disk space for docker build..."
@@ -81,7 +81,7 @@ jobs:
           fi
           
           df -h
-      - name: remove haskell
+      - name: remove dotnet tools
         run: |
           df -h
           echo "Freeing up disk space for docker build..."
@@ -101,7 +101,7 @@ jobs:
               sudo apt-get clean > /dev/null 2>&1 || true
           fi
           df -h
-      - name: remove packages
+      - name: remove unused packages
         run: |
           df -h
           echo "Freeing up disk space for docker build..."
