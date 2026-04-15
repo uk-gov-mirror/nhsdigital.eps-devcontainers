@@ -35,10 +35,8 @@ apt-get -y install --no-install-recommends htop vim curl git build-essential \
 # install AWS SAM CLI
 VERSION="${SAM_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_aws_sam_cli.sh"
 # Install ASDF
-echo "Installing asdf"
 VERSION="${ASDF_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_asdf.sh"
 # install gitleaks
-echo "Installing gitleaks"
 VERSION="${GITLEAKS_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_gitleaks.sh"
 
 # install gitsecrets
@@ -53,10 +51,13 @@ chmod 755 /usr/share/secrets-scanner
 curl -L https://raw.githubusercontent.com/NHSDigital/software-engineering-quality-framework/main/tools/nhsd-git-secrets/nhsd-rules-deny.txt -o /usr/share/secrets-scanner/nhsd-rules-deny.txt
 
 # get cfn-guard ruleset
-wget -O /tmp/ruleset.zip https://github.com/aws-cloudformation/aws-guard-rules-registry/releases/download/1.0.2/ruleset-build-v1.0.2.zip >/dev/null 2>&1
+tmp_dir="$(mktemp -d)"
+trap 'rm -rf "${tmp_dir}"' EXIT
+download_file="${tmp_dir}/ruleset.zip"
+curl -fsSL "https://github.com/aws-cloudformation/aws-guard-rules-registry/releases/download/1.0.2/ruleset-build-v1.0.2.zip" -o "${download_file}"
+
 mkdir -p "${SCRIPTS_DIR}/cfnguard_rulesets"
-unzip /tmp/ruleset.zip -d "${SCRIPTS_DIR}/cfnguard_rulesets" >/dev/null 2>&1
-rm /tmp/ruleset.zip
+unzip "${download_file}" -d "${SCRIPTS_DIR}/cfnguard_rulesets" 
 
 # clean up
 apt-get clean

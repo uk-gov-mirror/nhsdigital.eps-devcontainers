@@ -79,6 +79,7 @@ jobs:
             syft_image.tar
             grant_image.tar
             tflint_image.tar
+            zizmor_image.tar
   package_base_docker_image:
     uses: ./.github/workflows/build_multi_arch_image.yml
     permissions:
