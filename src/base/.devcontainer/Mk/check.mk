@@ -84,7 +84,11 @@ actionlint:
 	actionlint
 
 secret-scan:
-	git-secrets --scan-history .
+	@if [ -f .gitignore ]; then \
+		git-secrets --scan-history .; \
+	else \
+		gitleaks -v git; \
+	fi
 
 guard-%:
 	@ if [ "${${*}}" = "" ]; then \
