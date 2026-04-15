@@ -12,7 +12,7 @@ RUN --mount=type=secret,id=GH_TOKEN,env=GH_TOKEN \
     ARCH="${TARGETARCH}" \
     VERSION="${TFLINT_VERSION}" \
     GITHUB_REPO="terraform-linters/tflint" \
-    TOOL="tflint" \ 
+    TOOL="tflint" \
     DOWNLOAD_BINARY="${DOWNLOAD_BINARY}" \
     VERIFY_BINARY_ATTESTATION="false" \
     VERIFY_CHECKSUM="true" \
