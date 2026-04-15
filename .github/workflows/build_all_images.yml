@@ -11,9 +11,6 @@ name: build_all_images
       NO_CACHE:
         required: true
         type: boolean
-      pinned_image:
-        type: string
-        required: true
 permissions: {}
 jobs:
   discover_folders:
@@ -39,40 +36,33 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
   build_tool_images:
+    # build common tool images with a lower scoped github token as it uses a 3rd party docker image with github cli installed to verify attestation of tflint binary.
+    # token needs attestation read so it can verify attestation of tflint binary
     runs-on: ubuntu-22.04
-    container:
-      image: ${{ inputs.pinned_image }}
-      options: --user 1001:1001 --group-add 128
-    defaults:
-      run:
-        shell: bash
     permissions:
       contents: read
       attestations: read
     steps:
-      - name: copy .tool-versions
-        run: |
-          cp /home/vscode/.tool-versions "$HOME/.tool-versions"
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
           persist-credentials: false
       - name: build_grype
-        run:
+        run: |
           make build-grype
           docker save "local_grype:latest" -o grype_image.tar
       - name: build_syft
-        run:
+        run: |
           make build-syft
           docker save "local_syft:latest" -o syft_image.tar
       - name: build_grant
-        run:
+        run: |
           make build-grant
           docker save "local_grant:latest" -o grant_image.tar
 
       - name: build_tflint
-        run:
+        run: |
           make build-tflint
           docker save "local_tflint:latest" -o tflint_image.tar
 

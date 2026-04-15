@@ -53,4 +53,3 @@ jobs:
       docker_tag: '${{ needs.tag_release.outputs.version_tag }}'
       tag_latest: true
       NO_CACHE: false
-      pinned_image: ${{ needs.get_config_values.outputs.pinned_image }}

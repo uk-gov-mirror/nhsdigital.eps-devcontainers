@@ -50,4 +50,3 @@ jobs:
       docker_tag: 'ci-${{ needs.tag_release.outputs.version_tag }}'
       tag_latest: false
       NO_CACHE: false
-      pinned_image: ${{ needs.get_config_values.outputs.pinned_image }}

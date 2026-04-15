@@ -176,7 +176,6 @@ jobs:
           BASE_FOLDER: "${{ inputs.base_folder }}"
           NO_CACHE: '${{ inputs.NO_CACHE }}'
           BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Check docker vulnerabilities - json output
         run: |
           make scan-image-json
