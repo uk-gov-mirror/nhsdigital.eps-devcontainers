@@ -20,7 +20,7 @@ install-python:
 	poetry install
 
 install-node:
-	npm install
+	npm ci --ignore-scripts
 
 install-hooks: install-python
 	poetry run pre-commit install --install-hooks --overwrite
