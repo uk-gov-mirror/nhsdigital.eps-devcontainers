@@ -36,7 +36,9 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
   build_tool_images:
-    # build common tool images with a lower scoped github token as it uses a 3rd party docker image with github cli installed to verify attestation of tflint binary.
+    # build common tool images with a lower scoped github token
+    # as it uses a 3rd party docker image with github cli installed to verify attestation of tflint binary
+    # and we dont want to make a high scoped token available to that image
     # token needs attestation read so it can verify attestation of tflint binary
     runs-on: ubuntu-22.04
     permissions:
@@ -65,6 +67,8 @@ jobs:
         run: |
           make build-tflint
           docker save "local_tflint:latest" -o tflint_image.tar
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
         name: Upload docker images
