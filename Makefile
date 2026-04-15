@@ -109,7 +109,7 @@ build-zizmor:
 
 build-tools: build-syft build-grype build-grant build-tflint build-zizmor
 
-build-image: build-syft build-grype build-grant build-tflint guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
+build-image: build-tools guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
 	workspace_folder="$${CONTAINER_NAME}"; \
 	case "$${CONTAINER_NAME}" in \
 		eps_*) workspace_folder="$$(printf '%s' "$${CONTAINER_NAME}" | tr '_' '-')" ;; \

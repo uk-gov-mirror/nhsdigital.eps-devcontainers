@@ -12,7 +12,7 @@ RUN --mount=type=secret,id=GH_TOKEN,env=GH_TOKEN \
     ARCH="${TARGETARCH}" \
     VERSION="${ZIZMOR_VERSION}" \
     GITHUB_REPO="zizmorcore/zizmor" \
-    TOOL="zizmor" \ 
+    TOOL="zizmor" \
     DOWNLOAD_BINARY="${DOWNLOAD_BINARY}" \
     VERIFY_BINARY_ATTESTATION="true" \
     VERIFY_CHECKSUM="false" \
