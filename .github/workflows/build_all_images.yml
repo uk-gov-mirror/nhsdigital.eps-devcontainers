@@ -79,6 +79,7 @@ jobs:
             tflint_image.tar
   package_base_docker_image:
     uses: ./.github/workflows/build_multi_arch_image.yml
+    needs: [build_tool_images]
     with:
       tag_latest: ${{ inputs.tag_latest }}
       docker_tag: ${{ inputs.docker_tag }}
