@@ -84,6 +84,7 @@ jobs:
     needs:
       - get_issue_number
       - get_commit_id
+      - get_config_values
     uses: ./.github/workflows/build_all_images.yml 
     permissions:
       attestations: write
@@ -94,3 +95,4 @@ jobs:
       docker_tag: 'pr-${{ needs.get_issue_number.outputs.issue_number }}-${{ needs.get_commit_id.outputs.sha_short }}'
       tag_latest: false
       NO_CACHE: false
+      pinned_image: ${{ needs.get_config_values.outputs.pinned_image }}

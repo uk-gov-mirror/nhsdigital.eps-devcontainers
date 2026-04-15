@@ -11,14 +11,13 @@ name: build_all_images
       NO_CACHE:
         required: true
         type: boolean
-permissions:
-  attestations: write
-  contents: read
-  packages: write
-  id-token: write
+      pinned_image:
+        type: string
+        required: true
+permissions: {}
 jobs:
   discover_folders:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       base_node_folders: ${{ steps.find-folders.outputs.base_node }}
       node_24_language_folders: ${{ steps.find-folders.outputs.node_24_languages }}
@@ -40,11 +39,20 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
   build_tool_images:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    container:
+      image: ${{ inputs.pinned_image }}
+      options: --user 1001:1001 --group-add 128
+    defaults:
+      run:
+        shell: bash
     permissions:
       contents: read
       attestations: read
     steps:
+      - name: copy .tool-versions
+        run: |
+          cp /home/vscode/.tool-versions "$HOME/.tool-versions"
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
@@ -79,6 +87,11 @@ jobs:
             tflint_image.tar
   package_base_docker_image:
     uses: ./.github/workflows/build_multi_arch_image.yml
+    permissions:
+      attestations: write
+      contents: read
+      packages: write
+      id-token: write
     needs: [build_tool_images]
     with:
       tag_latest: ${{ inputs.tag_latest }}
@@ -90,6 +103,11 @@ jobs:
     needs:
       - package_base_docker_image
       - discover_folders
+    permissions:
+      attestations: write
+      contents: read
+      packages: write
+      id-token: write
     strategy:
       fail-fast: false
       matrix:
@@ -107,6 +125,11 @@ jobs:
       - package_base_docker_image
       - package_base_node_images
       - discover_folders
+    permissions:
+      attestations: write
+      contents: read
+      packages: write
+      id-token: write
     strategy:
       fail-fast: false
       matrix:
@@ -123,6 +146,11 @@ jobs:
     needs:
       - package_node_24_language_docker_images
       - discover_folders
+    permissions:
+      attestations: write
+      contents: read
+      packages: write
+      id-token: write
     strategy:
       fail-fast: false
       matrix:
