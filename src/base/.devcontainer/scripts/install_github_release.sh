@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-
 set -euo pipefail
+
 export DEBIAN_FRONTEND=noninteractive
 
 DEFAULT_INSTALL_DIR="/usr/local/bin"

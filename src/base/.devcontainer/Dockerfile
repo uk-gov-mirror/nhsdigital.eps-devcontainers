@@ -11,6 +11,7 @@ ARG TARGETARCH
 ARG SAM_VERSION="v1.158.0"
 ARG ASDF_VERSION="v0.18.1"
 ARG GITLEAKS_VERSION="8.30.1"
+ARG CFN_GUARD_VERSION="3.2.0"
 
 ENV SCRIPTS_DIR=${SCRIPTS_DIR}
 ENV CONTAINER_NAME=${CONTAINER_NAME}
@@ -18,11 +19,13 @@ ENV TARGETARCH=${TARGETARCH}
 ENV SAM_VERSION=${SAM_VERSION}
 ENV ASDF_VERSION=${ASDF_VERSION}
 ENV GITLEAKS_VERSION=${GITLEAKS_VERSION}
+ENV CFN_GUARD_VERSION=${CFN_GUARD_VERSION}
 COPY --chmod=755 scripts/lifecycle/*.sh ${SCRIPTS_DIR}/
 COPY --chmod=755 scripts/root_install.sh ${SCRIPTS_DIR}/${CONTAINER_NAME}/root_install.sh
 COPY --chmod=755 scripts/install_aws_sam_cli.sh ${SCRIPTS_DIR}/${CONTAINER_NAME}/install_aws_sam_cli.sh
 COPY --chmod=755 scripts/install_asdf.sh ${SCRIPTS_DIR}/${CONTAINER_NAME}/install_asdf.sh
 COPY --chmod=755 scripts/install_gitleaks.sh ${SCRIPTS_DIR}/${CONTAINER_NAME}/install_gitleaks.sh
+COPY --chmod=755 scripts/install_cfn_guard.sh ${SCRIPTS_DIR}/${CONTAINER_NAME}/install_cfn_guard.sh
 COPY --chmod=755 Mk ${SCRIPTS_DIR}/Mk
 
 WORKDIR ${SCRIPTS_DIR}/${CONTAINER_NAME}

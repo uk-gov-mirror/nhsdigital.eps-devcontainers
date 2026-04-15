@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-
-set -e
+set -euo pipefail
 
 # shellcheck disable=SC2129
 # shellcheck disable=SC2016
@@ -21,7 +20,7 @@ asdf plugin add terraform https://github.com/asdf-community/asdf-hashicorp.git
 asdf plugin add yq https://github.com/sudermanjr/asdf-yq.git
 
 # install cfn-guard
-curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/aws-cloudformation/cloudformation-guard/main/install-guard.sh | sh
+VERSION="${CFN_GUARD_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_cfn_guard.sh"
 
 # install base asdf versions of common tools
 cd /home/vscode

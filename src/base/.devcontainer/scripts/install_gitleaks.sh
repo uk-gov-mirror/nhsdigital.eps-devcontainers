@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 VERSION=${VERSION:-"8.30.1"}
 # Expected SHA256 checksums taken from https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1
@@ -14,12 +15,11 @@ fi
 # Checks if packages are installed and installs them if not
 check_packages() {
     if ! dpkg -s "$@" > /dev/null 2>&1; then
-        apt_get_update
         apt-get -y install --no-install-recommends "$@"
     fi
 }
 
-check_packages curl ca-certificates tar sha256sum
+check_packages curl ca-certificates tar
 
 install() {
     tmp_dir="$(mktemp -d)"

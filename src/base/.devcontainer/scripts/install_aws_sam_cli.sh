@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-
-set -e
+set -euo pipefail
 
 VERSION=${VERSION:-"latest"}
 VERBOSE=${VERBOSE:-"true"}
@@ -83,18 +82,9 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-apt_get_update()
-{
-    if [ "$(find /var/lib/apt/lists/* | wc -l)" = "0" ]; then
-        echo "Running apt-get update..."
-        apt-get update -y
-    fi
-}
-
 # Checks if packages are installed and installs them if not
 check_packages() {
     if ! dpkg -s "$@" > /dev/null 2>&1; then
-        apt_get_update
         apt-get -y install --no-install-recommends "$@"
     fi
 }

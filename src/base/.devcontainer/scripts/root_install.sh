@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -42,6 +42,7 @@ echo "Installing gitleaks"
 VERSION="${GITLEAKS_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_gitleaks.sh"
 
 # install gitsecrets
+# this should be removed once we have migrated all repos to gitleaks
 git clone https://github.com/awslabs/git-secrets.git /tmp/git-secrets
 cd /tmp/git-secrets
 make install
