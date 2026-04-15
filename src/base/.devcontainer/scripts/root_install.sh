@@ -37,6 +37,9 @@ VERSION="${SAM_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_aws_sam_cli.s
 # Install ASDF
 echo "Installing asdf"
 VERSION="${ASDF_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_asdf.sh"
+# install gitleaks
+echo "Installing gitleaks"
+VERSION="${GITLEAKS_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_gitleaks.sh"
 
 # install gitsecrets
 git clone https://github.com/awslabs/git-secrets.git /tmp/git-secrets
