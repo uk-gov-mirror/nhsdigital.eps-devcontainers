@@ -129,9 +129,8 @@ install() {
     curl -fsSL "${scriptUrl}" -o "${scriptZipFile}"
     curl -fsSL "${scriptUrl}.sig" -o "${scriptSigFile}"
 
-    verify_aws_sam_cli_gpg_signature "$scriptZipFile" "$scriptSigFile"
-    if (( $? > 0 )); then
-        echo "Could not verify GPG signature of AWS CLI install script. Make sure you provided a valid version."
+    if ! verify_aws_sam_cli_gpg_signature "$scriptZipFile" "$scriptSigFile"; then
+        echo "Could not verify GPG signature of AWS SAM CLI install script. Make sure you provided a valid version."
         exit 1
     fi
     echo "GPG signature of AWS SAM CLI install script verified successfully. Installing..."
