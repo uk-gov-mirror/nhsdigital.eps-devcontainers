@@ -134,11 +134,30 @@ jobs:
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
           node-version: '24.14.0'
+      - name: docker_artifact download
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: docker_artifact
+          path: images/
+      - name: extract docker images
+        run: |
+          for image in images/*.tar; do
+            docker load -i "$image"
+          done
+          rm -rf images
       - name: setup syft and grype
         run: |
           mkdir -p "$RUNNER_TEMP/bin"
-          docker build  --output="$RUNNER_TEMP/bin" -f "src/base/.devcontainer/Dockerfile.syft" src/base/.devcontainer/
-          docker build  --output="$RUNNER_TEMP/bin" -f "src/base/.devcontainer/Dockerfile.grype" src/base/.devcontainer/
+          id=$(docker create local_grype:latest)
+          docker cp "$id":/grype - | tar -xOf - grype > "$RUNNER_TEMP/bin/grype"
+          chmod +x "$RUNNER_TEMP/bin/grype"
+          docker rm -v "$id"
+
+          mkdir -p "$RUNNER_TEMP/bin"
+          id=$(docker create local_syft:latest)
+          docker cp "$id":/syft - | tar -xOf - syft > "$RUNNER_TEMP/bin/syft"
+          chmod +x "$RUNNER_TEMP/bin/syft"
+          docker rm -v "$id"
           echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
       - name: make install
         run: |

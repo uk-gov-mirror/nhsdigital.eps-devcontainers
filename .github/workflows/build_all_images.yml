@@ -39,6 +39,44 @@ jobs:
             echo "projects=$project_folders"
           } >> "$GITHUB_OUTPUT"
 
+  build_tool_images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      attestations: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: build_grype
+        run:
+          make build-grype
+          docker save "local_grype:latest" -o grype_image.tar
+      - name: build_syft
+        run:
+          make build-syft
+          docker save "local_syft:latest" -o syft_image.tar
+      - name: build_grant
+        run:
+          make build-grant
+          docker save "local_grant:latest" -o grant_image.tar
+
+      - name: build_tflint
+        run:
+          make build-tflint
+          docker save "local_tflint:latest" -o tflint_image.tar
+
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+        name: Upload docker images
+        with:
+          name: docker_artifact
+          path: |
+            grype_image.tar
+            syft_image.tar
+            grant_image.tar
+            tflint_image.tar
   package_base_docker_image:
     uses: ./.github/workflows/build_multi_arch_image.yml
     with:

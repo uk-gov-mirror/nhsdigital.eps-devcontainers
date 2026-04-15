@@ -65,19 +65,35 @@ build-all: build-base-image build-node-24-image build-node-24-python-3-10-image 
 	build-regression-tests-image
 
 build-syft:
-	docker build -f src/base/.devcontainer/Dockerfile.syft --tag local_syft:latest src/base/.devcontainer/
+	@if docker image inspect local_syft:latest >/dev/null 2>&1; then \
+		echo "Image local_syft:latest already exists. Skipping build."; \
+	else \
+		docker build -f src/base/.devcontainer/Dockerfile.syft --tag local_syft:latest src/base/.devcontainer/; \
+	fi
 build-grype:
-	docker build -f src/base/.devcontainer/Dockerfile.grype --tag local_grype:latest src/base/.devcontainer/
+	@if docker image inspect local_grype:latest >/dev/null 2>&1; then \
+		echo "Image local_grype:latest already exists. Skipping build."; \
+	else \
+		docker build -f src/base/.devcontainer/Dockerfile.grype --tag local_grype:latest src/base/.devcontainer/; \
+	fi
 
 build-grant:
-	docker build -f src/base/.devcontainer/Dockerfile.grant --tag local_grant:latest src/base/.devcontainer/
+	@if docker image inspect local_grant:latest >/dev/null 2>&1; then \
+		echo "Image local_grant:latest already exists. Skipping build."; \
+	else \
+		docker build -f src/base/.devcontainer/Dockerfile.grant --tag local_grant:latest src/base/.devcontainer/; \
+	fi
 
 build-tflint:
-	docker buildx build \
-		--secret id=GH_TOKEN,env=GITHUB_TOKEN \
-		-f src/projects/eps-storage-terraform/.devcontainer/Dockerfile.tflint \
-		--tag local_tflint:latest \
-		src/projects/eps-storage-terraform/.devcontainer/
+	@if docker image inspect local_tflint:latest >/dev/null 2>&1; then \
+		echo "Image local_tflint:latest already exists. Skipping build."; \
+	else \
+		docker buildx build \
+			--secret id=GH_TOKEN,env=GITHUB_TOKEN \
+			-f src/projects/eps-storage-terraform/.devcontainer/Dockerfile.tflint \
+			--tag local_tflint:latest \
+			src/projects/eps-storage-terraform/.devcontainer/; \
+	fi
 
 build-image: build-syft build-grype build-grant build-tflint guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
 	workspace_folder="$${CONTAINER_NAME}"; \
