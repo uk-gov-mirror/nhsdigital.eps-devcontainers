@@ -21,7 +21,7 @@ install() {
     tmp_dir="$(mktemp -d)"
     trap 'rm -rf "${tmp_dir}"' EXIT
 
-    download_file="${tmp_dir}/gitleaks.tar.gz"
+    download_file="${tmp_dir}/cfn-guard.tar.gz"
 
     if [ "$TARGETARCH" = "arm64" ] || [ "$TARGETARCH" == "aarch64" ]; then
         download_url="https://github.com/aws-cloudformation/cloudformation-guard/releases/download/${VERSION}/cfn-guard-v3-aarch64-ubuntu-latest.tar.gz"
