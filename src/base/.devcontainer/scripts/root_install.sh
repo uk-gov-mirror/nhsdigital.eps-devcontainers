@@ -40,6 +40,10 @@ VERSION="${ASDF_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_asdf.sh"
 VERSION="${GITLEAKS_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_gitleaks.sh"
 # install shellcheck
 VERSION="${SHELLCHECK_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_shellcheck.sh"
+# install direnv
+VERSION="${DIRENV_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_direnv.sh"
+# install yq
+VERSION="${YQ_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_yq.sh"
 
 # install gitsecrets
 # this should be removed once we have migrated all repos to gitleaks

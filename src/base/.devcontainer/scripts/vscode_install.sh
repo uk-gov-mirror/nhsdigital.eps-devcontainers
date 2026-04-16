@@ -12,11 +12,9 @@ echo 'export GEM_HOME="$HOME/gems"' >> ~/.bashrc
 echo 'export PATH="$HOME/gems/bin:$PATH"' >> ~/.bashrc
 
 # Install ASDF plugins
-asdf plugin add direnv
+# actionlint install is verified so can install via asdf
 asdf plugin add actionlint
 asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
-asdf plugin add terraform https://github.com/asdf-community/asdf-hashicorp.git
-asdf plugin add yq https://github.com/sudermanjr/asdf-yq.git
 
 # install cfn-guard
 VERSION="${CFN_GUARD_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_cfn_guard.sh"
