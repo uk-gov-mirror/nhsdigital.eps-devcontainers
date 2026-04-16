@@ -373,7 +373,7 @@ CONTAINER_NAME=base \
 
 # Cleaning up unused container images
 
-There is a script to delete unused container images on github. This runs on every merge to main and deletes pull request images, and on a weekly schedule it deletes images created by CI.   
+There is a script to delete unused container images on GitHub. This runs on every merge to main and deletes pull request images, and on a weekly schedule it deletes images created by CI.   
 You can run it manually using the following. Using the `dry-run` flag just shows what would be deleted
 
 ```
