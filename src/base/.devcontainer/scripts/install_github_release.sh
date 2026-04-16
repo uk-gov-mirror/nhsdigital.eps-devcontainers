@@ -6,9 +6,9 @@ export DEBIAN_FRONTEND=noninteractive
 DEFAULT_INSTALL_DIR="/usr/local/bin"
 INSTALL_DIR="${INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
 
-if ! command -v curl >/dev/null 2>&1 || ! command -v unzip >/dev/null 2>&1; then
+if ! command -v curl >/dev/null 2>&1 || ! command -v unzip >/dev/null 2>&1 || ! command -v tar >/dev/null 2>&1; then
 	apt-get update
-	apt-get install -y --no-install-recommends curl unzip ca-certificates
+	apt-get install -y --no-install-recommends curl unzip tar ca-certificates
 fi
 
 if ! command -v gh >/dev/null 2>&1; then
