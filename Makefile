@@ -85,7 +85,7 @@ build-grant:
 		docker build -f src/base/.devcontainer/Dockerfile.grant --tag local_grant:latest src/base/.devcontainer/; \
 	fi
 
-build-tflint:
+build-tflint: guard-GITHUB_TOKEN
 	@if docker image inspect local_tflint:latest >/dev/null 2>&1; then \
 		echo "Image local_tflint:latest already exists. Skipping build."; \
 	else \
@@ -96,7 +96,7 @@ build-tflint:
 			src/base/.devcontainer/; \
 	fi
 
-build-zizmor:
+build-zizmor: guard-GITHUB_TOKEN
 	@if docker image inspect local_zizmor:latest >/dev/null 2>&1; then \
 		echo "Image local_zizmor:latest already exists. Skipping build."; \
 	else \
@@ -162,6 +162,18 @@ lint-githubaction-scripts:
 
 clean:
 	rm -rf .out
+	docker image rm local_syft:latest || true
+	docker image rm local_grype:latest || true
+	docker image rm local_grant:latest || true
+	docker image rm local_tflint:latest || true
+	docker image rm local_zizmor:latest || true
+
+deep-clean: clean
+	rm -rf .venv
+	find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
+	poetry env remove --all
+	docker images --format "{{.Repository}}:{{.Tag}}" | grep ":local-build" | xargs -r docker rmi -f
+
 
 %:
 	@$(MAKE) -f /usr/local/share/eps/Mk/common.mk $@
