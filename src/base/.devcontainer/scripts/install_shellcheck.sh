@@ -15,7 +15,7 @@ fi
 # Checks if packages are installed and installs them if not
 check_packages() {
     if ! dpkg -s "$@" > /dev/null 2>&1; then
-        sudo apt-get -y install --no-install-recommends "$@"
+        apt-get -y install --no-install-recommends "$@"
     fi
 }
 
