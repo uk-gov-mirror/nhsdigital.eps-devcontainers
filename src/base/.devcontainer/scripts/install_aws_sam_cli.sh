@@ -96,8 +96,7 @@ check_packages curl ca-certificates gpg dirmngr unzip bash-completion less
 verify_aws_sam_cli_gpg_signature() {
     local filePath=$1
     local sigFilePath=$2
-    tmp_dir="$(mktemp -d)"
-    trap 'rm -rf "${tmp_dir}"' EXIT
+    local tmp_dir=$3
     local awsGpgKeyring="${tmp_dir}/aws-sam-cli-public-key.gpg"
 
     echo "${PRIMARY_PUBLIC_KEY}" | gpg --dearmor > "${awsGpgKeyring}"
@@ -129,7 +128,7 @@ install() {
     curl -fsSL "${scriptUrl}" -o "${scriptZipFile}"
     curl -fsSL "${scriptUrl}.sig" -o "${scriptSigFile}"
 
-    if ! verify_aws_sam_cli_gpg_signature "$scriptZipFile" "$scriptSigFile"; then
+    if ! verify_aws_sam_cli_gpg_signature "$scriptZipFile" "$scriptSigFile" "$tmp_dir"; then
         echo "Could not verify GPG signature of AWS SAM CLI install script. Make sure you provided a valid version."
         exit 1
     fi
