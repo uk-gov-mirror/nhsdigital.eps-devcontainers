@@ -87,7 +87,7 @@ secret-scan:
 	@if [ -f .gitallowed ]; then \
 		git-secrets --scan-history .; \
 	else \
-		gitleaks -v git; \
+		gitleaks -v --redact git; \
 	fi
 
 guard-%:
