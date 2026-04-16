@@ -4,7 +4,7 @@ set -euo pipefail
 VERSION=${VERSION:-"3.2.0"}
 # Expected SHA256 checksums taken from https://github.com/aws-cloudformation/cloudformation-guard/releases/tag/3.2.0
 # When we change cfn-guard versions, these must be changed
-sha256sum_expected_arm="sha256:d562e14831794a4859782f5609186970373e8e0a049fbded2c01612d2dcdb087"
+sha256sum_expected_arm="sha256:aa757b599e59425fe3322dc65cfc93d2931c7f818aa1626996f8ad4852eae5ca"
 sha256sum_expected_amd64="sha256:9f8c4d9f15f7dd54a37ea70a5237ba00aba682fb1e6521a744d12259961dfc13"
 
 
