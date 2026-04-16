@@ -13,7 +13,7 @@ guard-%:
 .PHONY: install install-python install-node install-hooks build-base-image build-node-24-image build-node-24-python-3-10-image build-node-24-python-3-12-image build-node-24-python-3-13-image build-node-24-python-3-14-image \
 	build-eps-storage-terraform-image build-eps-data-extract-image build-fhir-facade-image build-node-24-python-3-14-golang-1-24-image build-node-24-python-3-14-java-24-image \
 	build-regression-tests-image build-all build-image build-githubactions-image scan-image scan-image-json shell-image lint test lint-githubactions lint-githubaction-scripts clean \
-	build-syft build-grype build-grant build-tflint
+	build-syft build-grype build-grant build-tflint build-tools build-zizmor
 install: install-python install-node install-hooks
 
 install-python:
@@ -89,14 +89,35 @@ build-tflint:
 	@if docker image inspect local_tflint:latest >/dev/null 2>&1; then \
 		echo "Image local_tflint:latest already exists. Skipping build."; \
 	else \
+		if [ -z "$$GITHUB_TOKEN" ]; then \
+			echo "GITHUB_TOKEN environment variable not set. Please set it by running 'make github-login' and setting GITHUB_TOKEN to the value of 'gh auth token'."; \
+			exit 1; \
+		fi; \
 		docker buildx build \
 			--secret id=GH_TOKEN,env=GITHUB_TOKEN \
-			-f src/projects/eps-storage-terraform/.devcontainer/Dockerfile.tflint \
+			-f src/base/.devcontainer/Dockerfile.tflint \
 			--tag local_tflint:latest \
-			src/projects/eps-storage-terraform/.devcontainer/; \
+			src/base/.devcontainer/; \
 	fi
 
-build-image: build-syft build-grype build-grant build-tflint guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
+build-zizmor:
+	@if docker image inspect local_zizmor:latest >/dev/null 2>&1; then \
+		echo "Image local_zizmor:latest already exists. Skipping build."; \
+	else \
+		if [ -z "$$GITHUB_TOKEN" ]; then \
+			echo "GITHUB_TOKEN environment variable not set. Please set it by running 'make github-login' and setting GITHUB_TOKEN to the value of 'gh auth token'."; \
+			exit 1; \
+		fi; \
+		docker buildx build \
+			--secret id=GH_TOKEN,env=GITHUB_TOKEN \
+			-f src/base/.devcontainer/Dockerfile.zizmor \
+			--tag local_zizmor:latest \
+			src/base/.devcontainer/; \
+	fi
+
+build-tools: build-syft build-grype build-grant build-tflint build-zizmor
+
+build-image: build-tools guard-CONTAINER_NAME guard-BASE_VERSION_TAG guard-BASE_FOLDER guard-IMAGE_TAG
 	workspace_folder="$${CONTAINER_NAME}"; \
 	case "$${CONTAINER_NAME}" in \
 		eps_*) workspace_folder="$$(printf '%s' "$${CONTAINER_NAME}" | tr '_' '-')" ;; \
@@ -149,6 +170,18 @@ lint-githubaction-scripts:
 
 clean:
 	rm -rf .out
+	docker image rm local_syft:latest || true
+	docker image rm local_grype:latest || true
+	docker image rm local_grant:latest || true
+	docker image rm local_tflint:latest || true
+	docker image rm local_zizmor:latest || true
+
+deep-clean: clean
+	rm -rf .venv
+	find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
+	poetry env remove --all
+	docker images --format "{{.Repository}}:{{.Tag}}" | grep ":local-build" | xargs -r docker rmi -f
+
 
 %:
 	@$(MAKE) -f /usr/local/share/eps/Mk/common.mk $@

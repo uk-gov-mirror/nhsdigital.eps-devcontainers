@@ -37,9 +37,9 @@ jobs:
 
   build_tool_images:
     # build common tool images with a lower scoped github token
-    # as it uses a 3rd party docker image with github cli installed to verify attestation of tflint binary
-    # and we dont want to make a high scoped token available to that image
-    # token needs attestation read so it can verify attestation of tflint binary
+    # as it uses a 3rd party docker image with github cli installed to verify attestation of binaries downloaded from github
+    # and we don't want to make a high scoped token available to that image
+    # token needs attestation read so it can verify attestation of binaries
     name: Build tool images for on ${{ matrix.arch }}
     runs-on: '${{ matrix.runner }}'
     strategy:
@@ -59,23 +59,14 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: build_grype
+      - name: build_tools
         run: |
-          make build-grype
+          make build-tools
           docker save "local_grype:latest" -o grype_image.tar
-      - name: build_syft
-        run: |
-          make build-syft
           docker save "local_syft:latest" -o syft_image.tar
-      - name: build_grant
-        run: |
-          make build-grant
           docker save "local_grant:latest" -o grant_image.tar
-
-      - name: build_tflint
-        run: |
-          make build-tflint
           docker save "local_tflint:latest" -o tflint_image.tar
+          docker save "local_zizmor:latest" -o zizmor_image.tar
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -88,6 +79,7 @@ jobs:
             syft_image.tar
             grant_image.tar
             tflint_image.tar
+            zizmor_image.tar
   package_base_docker_image:
     uses: ./.github/workflows/build_multi_arch_image.yml
     permissions:

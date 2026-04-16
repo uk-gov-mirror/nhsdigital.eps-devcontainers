@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
+
 export DEBIAN_FRONTEND=noninteractive
 
 # Add amd64 architecture if on arm64
@@ -31,33 +32,21 @@ apt-get -y install --no-install-recommends htop vim curl git build-essential \
     libreadline-dev wget llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev liblzma-dev netcat-traditional libyaml-dev uuid-runtime xxd unzip
 
-# Download correct SAM CLI for arch
-echo "Installing aws-sam cli"
-if [ "$TARGETARCH" = "arm64" ] || [ "$TARGETARCH" = "aarch64" ]; then
-      wget -O /tmp/aws-sam-cli.zip --no-verbose "https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-arm64.zip"
-    else
-      wget -O /tmp/aws-sam-cli.zip --no-verbose "https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip"
-    fi
-    unzip -q /tmp/aws-sam-cli.zip -d /tmp/aws-sam-cli
-    /tmp/aws-sam-cli/install
-    rm /tmp/aws-sam-cli.zip
-    rm -rf /tmp/aws-sam-cli
-
+# install AWS SAM CLI
+VERSION="${SAM_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_aws_sam_cli.sh"
 # Install ASDF
-echo "Installing asdf"
-ASDF_VERSION=$(awk '!/^#/ && NF {print $1; exit}' "${SCRIPTS_DIR}/${CONTAINER_NAME}/.tool-versions.asdf")
-if [ "$TARGETARCH" = "arm64" ] || [ "$TARGETARCH" == "aarch64" ]; then
-    wget -O /tmp/asdf.tar.gz --no-verbose "https://github.com/asdf-vm/asdf/releases/download/v${ASDF_VERSION}/asdf-v${ASDF_VERSION}-linux-arm64.tar.gz"
-else
-    wget -O /tmp/asdf.tar.gz --no-verbose "https://github.com/asdf-vm/asdf/releases/download/v${ASDF_VERSION}/asdf-v${ASDF_VERSION}-linux-amd64.tar.gz"
-fi
-tar -xzf /tmp/asdf.tar.gz -C /tmp
-mkdir -p /usr/bin
-mv /tmp/asdf /usr/bin/asdf
-chmod +x /usr/bin/asdf
-rm -rf /tmp/asdf.tar.gz 
+VERSION="${ASDF_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_asdf.sh"
+# install gitleaks
+VERSION="${GITLEAKS_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_gitleaks.sh"
+# install shellcheck
+VERSION="${SHELLCHECK_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_shellcheck.sh"
+# install direnv
+VERSION="${DIRENV_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_direnv.sh"
+# install yq
+VERSION="${YQ_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_yq.sh"
 
 # install gitsecrets
+# this should be removed once we have migrated all repos to gitleaks
 git clone https://github.com/awslabs/git-secrets.git /tmp/git-secrets
 cd /tmp/git-secrets
 make install
@@ -68,10 +57,13 @@ chmod 755 /usr/share/secrets-scanner
 curl -L https://raw.githubusercontent.com/NHSDigital/software-engineering-quality-framework/main/tools/nhsd-git-secrets/nhsd-rules-deny.txt -o /usr/share/secrets-scanner/nhsd-rules-deny.txt
 
 # get cfn-guard ruleset
-wget -O /tmp/ruleset.zip https://github.com/aws-cloudformation/aws-guard-rules-registry/releases/download/1.0.2/ruleset-build-v1.0.2.zip >/dev/null 2>&1
+tmp_dir="$(mktemp -d)"
+trap 'rm -rf "${tmp_dir}"' EXIT
+download_file="${tmp_dir}/ruleset.zip"
+curl -fsSL "https://github.com/aws-cloudformation/aws-guard-rules-registry/releases/download/1.0.2/ruleset-build-v1.0.2.zip" -o "${download_file}"
+
 mkdir -p "${SCRIPTS_DIR}/cfnguard_rulesets"
-unzip /tmp/ruleset.zip -d "${SCRIPTS_DIR}/cfnguard_rulesets" >/dev/null 2>&1
-rm /tmp/ruleset.zip
+unzip "${download_file}" -d "${SCRIPTS_DIR}/cfnguard_rulesets" 
 
 # clean up
 apt-get clean
