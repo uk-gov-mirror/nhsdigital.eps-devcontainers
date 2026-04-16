@@ -28,7 +28,7 @@ install() {
     download_file="${tmp_dir}/shellcheck.tar.gz"
 
     if [ "$TARGETARCH" = "arm64" ] || [ "$TARGETARCH" == "aarch64" ]; then
-        download_url="https://github.com/koalaman/shellcheck/releases/download/${VERSION}/shellcheck-${VERSION}.linux.aarch64.tar.xz"
+        download_url="https://github.com/koalaman/shellcheck/releases/download/${VERSION}/shellcheck-${VERSION}.linux.aarch64.tar.gz"
         sha256sum_expected="${sha256sum_expected_arm}"
     else
         download_url="https://github.com/koalaman/shellcheck/releases/download/${VERSION}/shellcheck-${VERSION}.linux.x86_64.tar.gz"
