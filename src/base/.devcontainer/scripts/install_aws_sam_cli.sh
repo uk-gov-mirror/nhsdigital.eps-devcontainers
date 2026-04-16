@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# taken from https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/reference-sam-cli-install-verify.html on how to verify installation
+
 if [ "${VERSION}" = "latest" ]; then
     VERSION="$(curl -fsSLI -o /dev/null -w '%{url_effective}' https://github.com/aws/aws-sam-cli/releases/latest | awk -F/ '{print $NF}')"
 fi
