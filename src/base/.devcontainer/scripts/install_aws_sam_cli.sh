@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-VERSION=${VERSION:-"latest"}
-VERBOSE=${VERBOSE:-"true"}
+if [ "${VERSION}" = "latest" ]; then
+    VERSION="$(curl -fsSLI -o /dev/null -w '%{url_effective}' https://github.com/aws/aws-sam-cli/releases/latest | awk -F/ '{print $NF}')"
+fi
 
 PRIMARY_PUBLIC_KEY="-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v2.0.22 (GNU/Linux)
