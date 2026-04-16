@@ -38,6 +38,8 @@ VERSION="${SAM_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_aws_sam_cli.s
 VERSION="${ASDF_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_asdf.sh"
 # install gitleaks
 VERSION="${GITLEAKS_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_gitleaks.sh"
+# install shellcheck
+VERSION="${SHELLCHECK_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_shellcheck.sh"
 
 # install gitsecrets
 # this should be removed once we have migrated all repos to gitleaks

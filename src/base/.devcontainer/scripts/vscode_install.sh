@@ -12,7 +12,6 @@ echo 'export GEM_HOME="$HOME/gems"' >> ~/.bashrc
 echo 'export PATH="$HOME/gems/bin:$PATH"' >> ~/.bashrc
 
 # Install ASDF plugins
-asdf plugin add shellcheck https://github.com/luizm/asdf-shellcheck.git
 asdf plugin add direnv
 asdf plugin add actionlint
 asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git

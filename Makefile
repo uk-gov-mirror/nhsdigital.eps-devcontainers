@@ -85,10 +85,14 @@ build-grant:
 		docker build -f src/base/.devcontainer/Dockerfile.grant --tag local_grant:latest src/base/.devcontainer/; \
 	fi
 
-build-tflint: guard-GITHUB_TOKEN
+build-tflint:
 	@if docker image inspect local_tflint:latest >/dev/null 2>&1; then \
 		echo "Image local_tflint:latest already exists. Skipping build."; \
 	else \
+		if [ -z "$$GITHUB_TOKEN" ]; then \
+			echo "GITHUB_TOKEN environment variable not set. Please set it by running 'make github-login' and setting GITHUB_TOKEN to the value of 'gh auth token'."; \
+			exit 1; \
+		fi; \
 		docker buildx build \
 			--secret id=GH_TOKEN,env=GITHUB_TOKEN \
 			-f src/base/.devcontainer/Dockerfile.tflint \
@@ -96,10 +100,14 @@ build-tflint: guard-GITHUB_TOKEN
 			src/base/.devcontainer/; \
 	fi
 
-build-zizmor: guard-GITHUB_TOKEN
+build-zizmor:
 	@if docker image inspect local_zizmor:latest >/dev/null 2>&1; then \
 		echo "Image local_zizmor:latest already exists. Skipping build."; \
 	else \
+		if [ -z "$$GITHUB_TOKEN" ]; then \
+			echo "GITHUB_TOKEN environment variable not set. Please set it by running 'make github-login' and setting GITHUB_TOKEN to the value of 'gh auth token'."; \
+			exit 1; \
+		fi; \
 		docker buildx build \
 			--secret id=GH_TOKEN,env=GITHUB_TOKEN \
 			-f src/base/.devcontainer/Dockerfile.zizmor \
