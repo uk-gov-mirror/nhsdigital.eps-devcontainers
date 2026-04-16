@@ -16,6 +16,23 @@ if ! command -v gh >/dev/null 2>&1; then
 	exit 1
 fi
 
+required_vars=(
+	"GITHUB_REPO"
+	"VERSION"
+	"DOWNLOAD_BINARY"
+	"TOOL"
+	"COMPRESSION"
+	"VERIFY_BINARY_ATTESTATION"
+	"VERIFY_CHECKSUM"
+)
+
+for var_name in "${required_vars[@]}"; do
+	if [ -z "${!var_name:-}" ]; then
+		echo "${var_name} must be defined"
+		exit 1
+	fi
+done
+
 if [ "${VERIFY_BINARY_ATTESTATION}" != "true" ] && [ "${VERIFY_CHECKSUM}" != "true" ]; then
 	echo "VERIFY_BINARY_ATTESTATION or VERIFY_CHECKSUM must be set to true"
 	exit 1
