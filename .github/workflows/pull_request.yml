@@ -5,15 +5,6 @@ name: pull_request
       - main
 permissions: {}
 jobs:
-  dependabot-auto-approve-and-merge:
-    needs: quality_checks
-    uses: NHSDigital/eps-common-workflows/.github/workflows/dependabot-auto-approve-and-merge.yml@8b259f4f2d2b8ff1345fb0d2f9b9f0fbb9d19845
-    permissions:
-      contents: write
-      pull-requests: write
-    secrets:
-      AUTOMERGE_APP_ID: '${{ secrets.AUTOMERGE_APP_ID }}'
-      AUTOMERGE_PEM: '${{ secrets.AUTOMERGE_PEM }}'
   get_config_values:
     uses: NHSDigital/eps-common-workflows/.github/workflows/get-repo-config.yml@8b259f4f2d2b8ff1345fb0d2f9b9f0fbb9d19845
     with:
@@ -85,13 +76,13 @@ jobs:
       - get_issue_number
       - get_commit_id
       - get_config_values
-    uses: ./.github/workflows/build_all_images.yml 
+    uses: ./.github/workflows/build_all_images.yml
     permissions:
       attestations: write
       contents: read
       packages: write
       id-token: write
-    with: 
+    with:
       docker_tag: 'pr-${{ needs.get_issue_number.outputs.issue_number }}-${{ needs.get_commit_id.outputs.sha_short }}'
       tag_latest: false
       NO_CACHE: false
