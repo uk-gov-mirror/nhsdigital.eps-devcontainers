@@ -45,17 +45,6 @@ VERSION="${DIRENV_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_direnv.sh"
 # install yq
 VERSION="${YQ_VERSION}" "${SCRIPTS_DIR}/${CONTAINER_NAME}/install_yq.sh"
 
-# install gitsecrets
-# this should be removed once we have migrated all repos to gitleaks
-git clone https://github.com/awslabs/git-secrets.git /tmp/git-secrets
-cd /tmp/git-secrets
-make install
-cd
-rm -rf /tmp/git-secrets
-mkdir -p /usr/share/secrets-scanner
-chmod 755 /usr/share/secrets-scanner
-curl -L https://raw.githubusercontent.com/NHSDigital/software-engineering-quality-framework/main/tools/nhsd-git-secrets/nhsd-rules-deny.txt -o /usr/share/secrets-scanner/nhsd-rules-deny.txt
-
 # get cfn-guard ruleset
 tmp_dir="$(mktemp -d)"
 trap 'rm -rf "${tmp_dir}"' EXIT
