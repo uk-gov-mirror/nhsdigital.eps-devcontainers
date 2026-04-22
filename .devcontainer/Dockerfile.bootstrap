@@ -52,15 +52,6 @@ RUN if [ "$TARGETARCH" = "arm64" ] || [ "$TARGETARCH" == "aarch64" ]; then \
     chmod +x /usr/bin/asdf && \
     rm -rf /tmp/asdf.tar.gz 
 
-# install gitsecrets
-RUN git clone https://github.com/awslabs/git-secrets.git /tmp/git-secrets && \
-    cd /tmp/git-secrets && \
-    make install && \
-    cd && \
-    rm -rf /tmp/git-secrets && \
-    mkdir -p /usr/share/secrets-scanner && \
-    chmod 755 /usr/share/secrets-scanner && \
-    curl -L https://raw.githubusercontent.com/NHSDigital/software-engineering-quality-framework/main/tools/nhsd-git-secrets/nhsd-rules-deny.txt -o /usr/share/secrets-scanner/nhsd-rules-deny.txt
 
 USER vscode
 
@@ -89,6 +80,3 @@ COPY .devcontainer/.tool-versions.bootstrap /home/vscode/.tool-versions
 # install python before poetry to ensure correct python version is used
 RUN asdf install python; \
     asdf install
-
-RUN git-secrets --register-aws --global && \
-  git-secrets --add-provider --global -- cat /usr/share/secrets-scanner/nhsd-rules-deny.txt
