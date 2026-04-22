@@ -52,7 +52,7 @@ asdf install and setup for these so they are available globally as vscode user
  - actionlint
  - ruby (for GitHub Pages)
 
-Install and setup git-secrets.   
+Install and setup gitleaks.   
 
 # Using the images
 ## Project setup
@@ -179,7 +179,7 @@ Check targets (`check.mk`)
 - `cfn-guard-cdk` - validates `cdk.out` against cfn-guard rulesets and writes outputs to `.cfn_guard_out/`
 - `cfn-guard-terraform` - validates `terraform_plans` against cfn-guard rulesets and writes outputs to `.cfn_guard_out/`
 - `actionlint` - runs actionlint against GitHub Actions
-- `secret-scan` - runs git-secrets or gitleaks (including scanning history) against the repository
+- `secret-scan` - runs gitleaks (including scanning history) against the repository
 - `guard-<ENVIRONMENT_VARIABLE>` - checks if an environment variable is set and errors if it is not
 - `zizmor` - runs [zizmor](https://github.com/zizmorcore/zizmor) in the local directory to check github workflows and actions
 - `syft-generate-sbom` - uses syft to generate an sbom in cyclonedx-json format. This *does not* include dev dependencies. Outputs file to .sbom/sbom.cdx.json. 
