@@ -62,6 +62,14 @@ ignore:
   - vulnerability: GHSA-2599-h6xx-hpxp
 # eps-storage-terraform vulnerabilities
   - vulnerability: CVE-2025-68119
+  - vulnerability: GHSA-mh2q-q3fh-2475
+    package:
+      name: go.opentelemetry.io/otel
+      version: v1.38.0
+  - vulnerability: GHSA-mh2q-q3fh-2475
+    package:
+      name: go.opentelemetry.io/otel
+      version: v1.39.0
 # eps-data-extract vulnerabilities
   - vulnerability: GHSA-6fmv-xxpf-w3cw
   - vulnerability: CVE-2026-34282
@@ -93,6 +101,14 @@ ignore:
   - vulnerability: CVE-2026-22016
     package:
       name: openjdk
+      version: 20.0.2+9-78
+  - vulnerability: CVE-2026-34282
+    package:
+      name: jdk
+      version: 20.0.2+9-78
+  - vulnerability: CVE-2026-22016
+    package:
+      name: jdk
       version: 20.0.2+9-78
 # node-24_python_3_14_java_24 vulnerabilities
   - vulnerability: GHSA-6fmv-xxpf-w3cw
