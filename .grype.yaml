@@ -56,6 +56,14 @@ ignore:
   - vulnerability: CVE-2025-68119
 # eps-data-extract vulnerabilities
   - vulnerability: GHSA-6fmv-xxpf-w3cw
+  - vulnerability: CVE-2026-34282
+    package:
+      name: openjdk
+      version: 17.0.18+8
+  - vulnerability: CVE-2026-22016
+    package:
+      name: openjdk
+      version: 17.0.18+8
 # fhir-facade vulnerabilities
   - vulnerability: CVE-2022-26485
   - vulnerability: CVE-2022-26486
@@ -71,6 +79,13 @@ ignore:
   - vulnerability: CVE-2025-53066
   - vulnerability: CVE-2026-21945
   - vulnerability: CVE-2026-21932
+    package:
+      name: openjdk
+      version: 20.0.2+9-78
+  - vulnerability: CVE-2026-22016
+    package:
+      name: openjdk
+      version: 20.0.2+9-78
 # node-24_python_3_14_java_24 vulnerabilities
   - vulnerability: GHSA-6fmv-xxpf-w3cw
   - vulnerability: CVE-2025-53066
@@ -78,3 +93,11 @@ ignore:
   - vulnerability: CVE-2026-21932
   - vulnerability: CVE-2026-27143
   - vulnerability: CVE-2026-27144
+  - vulnerability: CVE-2026-34282
+    package:
+      name: openjdk
+      version: 24.0.2+12
+  - vulnerability: CVE-2026-22016
+    package:
+      name: openjdk
+      version: 24.0.2+12
