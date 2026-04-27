@@ -39,6 +39,14 @@ ignore:
   - vulnerability: CVE-2026-4786
   - vulnerability: GHSA-pc3f-x583-g7j2
   - vulnerability: CVE-2026-3298
+  - vulnerability: GHSA-q339-8rmv-2mhv
+    package:
+      name: erb
+      version: 4.0.3
+  - vulnerability: GHSA-mh2q-q3fh-2475
+    package:
+      name: go.opentelemetry.io/otel
+      version: v1.40.0
 # node_24 vulnerabilities
   - vulnerability: GHSA-c2c7-rcm5-vvqj
   - vulnerability: GHSA-7r86-cg39-jmmj
