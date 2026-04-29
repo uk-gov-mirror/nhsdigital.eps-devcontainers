@@ -14,7 +14,7 @@ jobs:
       contents: read
       packages: read
   quality_checks:
-    uses: NHSDigital/eps-common-workflows/.github/workflows/quality-checks-devcontainer.yml@8b259f4f2d2b8ff1345fb0d2f9b9f0fbb9d19845
+    uses: NHSDigital/eps-common-workflows/.github/workflows/quality-checks-devcontainer.yml@c4efd04c5ff1c7e92e7fe5932b29d0de1a301cdf
     needs:
       - get_config_values
     with:
