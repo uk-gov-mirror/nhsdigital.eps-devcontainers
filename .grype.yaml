@@ -77,3 +77,9 @@ ignore:
   - vulnerability: CVE-2026-21932
   - vulnerability: CVE-2026-27143
   - vulnerability: CVE-2026-27144
+# gem
+  - vulnerability: GHSA-q339-8rmv-2mhv
+# os level python
+  - vulnerability: CVE-2026-3298
+# go 
+  - vulnerability: GHSA-mh2q-q3fh-2475
